@@ -1,5 +1,5 @@
 class ScriptLoader {
-  constructor({basePath, intercept}){
+  constructor({basePath, intercept}={}){
     this.basePath = basePath;
     this.intercept = intercept;
   }

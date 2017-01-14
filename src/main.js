@@ -1,4 +1,4 @@
-const modulin = new Modulin({
+var modulin = new Modulin({
   importParser: new ImportParser(),
   exportParser: new ExportParser(),
   loaderFactory: new AmdFactory(),
@@ -6,9 +6,10 @@ const modulin = new Modulin({
     importGenerator: new ImportGeneratorAmd(),
     exportGenerator: new ExportGeneratorAmd()
   }),
-  dependencyRepository: new AmdDependencyRepository({
+  dependencyRepositoryFactory: ({intercept, basePath})=> new AmdDependencyRepository({
     scriptLoader: new ScriptLoader({
-      basePath: 'examples'
+      intercept,
+      basePath
     }),
     dependencyResolver: new AmdDependencyResolver()
   })

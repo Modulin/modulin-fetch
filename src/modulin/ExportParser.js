@@ -28,11 +28,15 @@ class ExportParser {
       return '';
     });
 
-    const expressionRe = /^\s*export\s+(?:default\s+)?([\w{(]+)/gm;
-    const exporessionScript = preDeclaredVariableScript.replace(expressionRe, (line, expression) =>{
-      const type = 'expression';
-      lines.push({type, line});
-      return `var __DEFAULTEXPORT = ${expression}`;
+    const expressionRe = /^\s*export\s+(default\s+)?([\w{(]+)(?:\s+([\w]+))?/gm;
+    const exporessionScript = preDeclaredVariableScript.replace(expressionRe, (line, isDefault, expression, name) =>{
+      if(isDefault) {
+        return `exports['default'] = ${expression}`;
+      } else {
+        const alias = name;
+        return `exports['${alias}'] = ${expression}`;
+      }
+
     });
 
     return [exporessionScript, lines];
@@ -45,6 +49,7 @@ class ExportParser {
   tokenize({type, line}){
     switch(type){
       case 'variableDeclaration':
+        debugger;
         return new ExportStatement({
           type: 'variable',
           // members: properties.members.map((member)=>new ExportMember(member)),
@@ -60,13 +65,6 @@ class ExportParser {
           members: properties.members.map((member)=>new ExportMember(member)),
           module: properties.module,
           moduleIsString: properties.moduleIsString
-        });
-      case 'expression':
-        return new ExportStatement({
-          type: 'expression',
-          // members: properties.members.map((member)=>new ExportMember(member)),
-          // module: properties.module,
-          // moduleIsString: properties.moduleIsString
         });
     }
 

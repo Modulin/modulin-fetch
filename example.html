@@ -3,33 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <script src="src/Request.js"></script>
-    <script src="src/TokenizerUtils.js"></script>
+    <script src="src/modulin/Request.js"></script>
+    <script src="src/modulin/TokenizerUtils.js"></script>
 
-    <script src="src/ImportTokenizer.js"></script>
-    <script src="src/ExportTokenizer.js"></script>
+    <script src="src/modulin/ImportTokenizer.js"></script>
+    <script src="src/modulin/ExportTokenizer.js"></script>
 
-    <script src="src/ImportParser.js"></script>
-    <script src="src/ExportParser.js"></script>
+    <script src="src/modulin/ImportParser.js"></script>
+    <script src="src/modulin/ExportParser.js"></script>
 
-    <script src="src/ImportGeneratorAmd.js"></script>
-    <script src="src/WrapperGeneratorAmd.js"></script>
-    <script src="src/ExportGeneratorAmd.js"></script>
+    <script src="src/modulin/ImportGeneratorAmd.js"></script>
+    <script src="src/modulin/WrapperGeneratorAmd.js"></script>
+    <script src="src/modulin/ExportGeneratorAmd.js"></script>
 
-    <script src="src/AmdFactory.js"></script>
-    <script src="src/AmdDependencyRepository.js"></script>
-    <script src="src/AmdDependencyResolver.js"></script>
+    <script src="src/modulin/AmdFactory.js"></script>
+    <script src="src/modulin/AmdDependencyRepository.js"></script>
+    <script src="src/modulin/AmdDependencyResolver.js"></script>
 
-    <script src="src/ScriptLoader.js"></script>
-    <script src="src/Modulin.js"></script>
+    <script src="src/modulin/ScriptLoader.js"></script>
+    <script src="src/modulin/Modulin.js"></script>
 
     <script src="src/main.js"></script>
 </head>
 <body>
 <script>
-  window.define = modulin.createLoader();
+  window.define = modulin.createLoader("src/");
 
-  define(['/test1'], {});
+  define(['examples/test1'], {});
 </script>
 </body>
 </html>

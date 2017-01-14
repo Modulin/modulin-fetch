@@ -9,7 +9,7 @@ class ExportTokenizer {
     const matchResult = line.match(defaultMemberRe);
 
     if(!matchResult)
-      return null;
+      throw "";
 
     const module =  matchResult[4];
     const moduleIsString = !!matchResult[3];
@@ -21,4 +21,5 @@ class ExportTokenizer {
 
     return {members, allMembers, module, moduleIsString};
   }
+
 }

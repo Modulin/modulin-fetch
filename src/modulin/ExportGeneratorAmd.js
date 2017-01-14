@@ -21,7 +21,7 @@ class ExportGeneratorAmd {
 
     switch(member.type) {
       case "mapped":
-        return `exports.${alias} = ${name};`;
+        return `exports['${alias}'] = ${name};`;
       default:
         return '';
     }

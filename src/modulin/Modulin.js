@@ -1,13 +1,11 @@
 class Modulin {
 
-  constructor({importParser, exportParser, wrapperGenerator, dependencyRepository, loaderFactory}){
+  constructor({importParser, exportParser, wrapperGenerator, dependencyRepositoryFactory, loaderFactory}){
     this.importParser = importParser;
     this.exportParser = exportParser;
     this.wrapperGenerator = wrapperGenerator;
-    this.dependencyRepository = dependencyRepository;
+    this.dependencyRepositoryFactory = dependencyRepositoryFactory;
     this.loaderFactory = loaderFactory;
-
-    this.dependencyRepository.scriptLoader.intercept = this.getScriptInterceptor();
 
     this.defautImports = [
       new ImportStatement({moduleName: 'exports', id: 'exports', members: [] })
@@ -28,7 +26,13 @@ class Modulin {
     return this.wrapperGenerator.wrap(scriptExportsFormatted, importsExports.imports, importsExports.exports);
   }
 
-  createLoader() {
-    return this.loaderFactory.createLoader(this.dependencyRepository);
+  createLoader(basePath) {
+
+    const dependencyRepository = this.dependencyRepositoryFactory({
+      intercept: this.getScriptInterceptor(),
+      basePath: basePath
+    });
+
+    return this.loaderFactory.createLoader(dependencyRepository);
   }
 }
