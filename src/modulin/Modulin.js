@@ -42,4 +42,9 @@ export default class Modulin {
 
     return this.loaderFactory.createLoader(dependencyRepository);
   }
+
+  load(basePath, module) {
+    window.define = this.createLoader(basePath);
+    define([module], {});
+  }
 }
