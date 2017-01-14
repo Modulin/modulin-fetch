@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="src/Request.js"></script>
+
+    <script src="src/ImportTokenizer.js"></script>
+    <script src="src/ImportParser.js"></script>
+    <script src="src/ImportGeneratorAmd.js"></script>
+
+    <script src="src/ScriptLoader.js"></script>
+
+    <script src="src/Amd.js"></script>
+</head>
+<body>
+<script>
+  const basePath = 'examples';
+  const importParser = new ImportParser();
+  const importGenerator = new ImportGeneratorAmd();
+  const intercept = (script) => {
+    const scriptImportsStripped = importParser.parse(script);
+    const scriptImportsResolved = importGenerator.generate(...scriptImportsStripped);
+
+    return scriptImportsResolved;
+  };
+  const scriptLoader = new ScriptLoader({basePath, intercept});
+  const dependencyResolver = new AmdDependencyResolver();
+  const amd = new AmdDependencyManager({scriptLoader, dependencyResolver});
+  window.define = generateDefine(amd);
+
+  define(['/test1'], ()=>{});
+</script>
+</body>
+</html>
