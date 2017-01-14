@@ -31,14 +31,16 @@ class AmdDependencyRepository {
 
     unloadedDependencies.forEach(path=>{
       const id = path;
-      this.loadingModuleIds.push(path);
-      this.scriptLoader
-        .load(`${path}.js`, id)
-        .then((script) => {
-          const index = this.loadingModuleIds.indexOf(path);
-          index !== -1 && this.loadingModuleIds.splice(index, 1);
-          script.execute();
-        });
+      if(this.loadingModuleIds.indexOf(path) === -1) {
+        this.loadingModuleIds.push(path);
+        this.scriptLoader
+          .load(`${path}.js`, id)
+          .then((script) => {
+            const index = this.loadingModuleIds.indexOf(path);
+            index !== -1 && this.loadingModuleIds.splice(index, 1);
+            script.execute();
+          });
+      }
     });
     this.pendingModules.push(module);
     this.detectCircularReferences();

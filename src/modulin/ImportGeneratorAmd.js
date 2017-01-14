@@ -4,7 +4,10 @@ class ImportGeneratorAmd {
   }
 
   generate(importStatements) {
-    const processedImportStatements = importStatements.map(statement => ({id: statement.id || this.generateId(), statement}));
+    const processedImportStatements = importStatements.map(statement => {
+      const id = statement.id || this.generateId();
+      return {id, statement}
+    });
 
     const dependencies = processedImportStatements
       .map(s=>s.statement.moduleName)
