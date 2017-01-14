@@ -5,12 +5,11 @@ class ImportGeneratorAmd {
 
   generate(script, importStatements) {
     const res = this.wrap(script, importStatements);
-    console.log(importStatements, res);
     return res;
   }
 
   generateId() {
-    return `__AMDDEPENDENCY${++this.counter}`
+    return `__DEP${++this.counter}`
   }
 
   wrap(script, importStatements) {
@@ -32,22 +31,21 @@ class ImportGeneratorAmd {
           const name = member.name;
           const alias = member.alias || name;
 
-          switch(member.type){
+          switch(member.type) {
             case "default":
-              return `const ${alias} = ${id}["default"]`;
+              return `var ${alias} = ${id}["default"]`;
             case "all":
-              return `const ${alias} = ${id}`;
+              return `var ${alias} = ${id}`;
             case "mapped":
-              return `const ${alias} = ${id}[${name}]`;
+              return `var ${alias} = ${id}["${name}"]`;
+            default:
+              return '';
           }
         })
         .join(';')
       )
-      .join(';\n');
+      .join(';\n  ');
 
-    return `define([${dependencies}], function(${dependencyNames}){
-      ${mappedDependencies}
-      ${script}
-    });`
+    return `define([${dependencies}], function(${dependencyNames}){ ${mappedDependencies}\n${script}});`
   }
 }

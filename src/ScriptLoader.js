@@ -4,21 +4,23 @@ class ScriptLoader {
     this.intercept = intercept;
   }
 
-  load(path) {
+  load(path, id) {
     const url = `${this.basePath}${path}`;
     return new Request({url})
-      .then(source=>new Script(this.intercept(source)));
+      .then(source=>new Script(this.intercept(source), id));
   }
 }
 
 class Script {
 
-  constructor(source) {
+  constructor(source, id) {
+    this.id = id;
     this.source = source;
   }
 
   execute() {
-    eval(this.source);
+    const source = `define.__scriptSource = "${this.id}"; ${this.source}`;
+    eval(source);
   }
 
 }

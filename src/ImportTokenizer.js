@@ -11,7 +11,7 @@ class Tokenizer {
   }
 
   module(line) {
-    const moduleRe = /(?:from\s+)?(["'])([\w-]+)\1;?\s*$/;
+    const moduleRe = /(?:from\s+)?(["'])([\w/-]+)\1;?\s*$/;
     const matchResult = line.match(moduleRe);
     const moduleName = matchResult
       ? matchResult[2]

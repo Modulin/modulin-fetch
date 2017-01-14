@@ -11,6 +11,8 @@
 
     <script src="src/ScriptLoader.js"></script>
 
+    <script src="src/AmdDependencyRepository.js"></script>
+    <script src="src/AmdDependencyResolver.js"></script>
     <script src="src/Amd.js"></script>
 </head>
 <body>
@@ -26,10 +28,10 @@
   };
   const scriptLoader = new ScriptLoader({basePath, intercept});
   const dependencyResolver = new AmdDependencyResolver();
-  const amd = new AmdDependencyManager({scriptLoader, dependencyResolver});
+  const amd = new AmdDependencyRepository({scriptLoader, dependencyResolver});
   window.define = generateDefine(amd);
 
-  define(['/test1'], ()=>{});
+  define(['/test1'], {});
 </script>
 </body>
 </html>
