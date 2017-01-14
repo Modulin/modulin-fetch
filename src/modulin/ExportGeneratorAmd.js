@@ -1,4 +1,4 @@
-class ExportGeneratorAmd {
+export default class ExportGeneratorAmd {
   constructor(){ }
 
   generate(exportStatements) {

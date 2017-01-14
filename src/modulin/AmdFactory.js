@@ -13,7 +13,7 @@ class AmdModule {
   }
 }
 
-class AmdFactory {
+export default class AmdFactory {
   createLoader(dependencyRepository) {
     define.amd = {};
     return define;
@@ -27,14 +27,14 @@ class AmdFactory {
     function normalizeInput(id, dependencies, factory) {
       if (typeof id === 'function' || id.constructor.name === 'Object') {
         return {
-          id: define.__scriptSource,
+          id: define.amd.__scriptSource,
           dependencies: [],
           factory: id
         };
       }
       else if (id.constructor.name === 'Array') {
         return {
-          id: define.__scriptSource,
+          id: define.amd.__scriptSource,
           dependencies: id,
           factory: dependencies
         };

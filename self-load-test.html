@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Run tests</title>
+    <title>Self load test</title>
     <script src="build/modulin.js"></script>
 </head>
 <body>
@@ -10,7 +10,7 @@
   var define = modulin.createLoader("src/");
   define(['main'], function (modulin) {
     var define = modulin.exports.default.createLoader("src/");
-    define(['tests/simpleImport'], {});
+    define(['examples/test1'], {});
   });
 </script>
 </body>

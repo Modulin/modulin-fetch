@@ -1,4 +1,6 @@
-class ImportGeneratorAmd {
+import TokenizerUtils from "./TokenizerUtils";
+
+export default class ImportGeneratorAmd {
   constructor(){
     this.counter = 0;
   }

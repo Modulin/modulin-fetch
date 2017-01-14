@@ -1,4 +1,6 @@
-class Modulin {
+import {ImportStatement} from "./ImportParser"
+
+export default class Modulin {
 
   constructor({importParser, exportParser, wrapperGenerator, dependencyRepositoryFactory, loaderFactory}){
     this.importParser = importParser;
@@ -17,11 +19,11 @@ class Modulin {
     return this.intercept.bind(this);
   }
 
-  intercept(script){
+  intercept(script, id) {
     const importsExports = {imports : [...this.defautImports], exports: [...this.defaultExports]};
 
-    const scriptImportsFormatted = this.importParser.parse(script, importsExports);
-    const scriptExportsFormatted = this.exportParser.parse(scriptImportsFormatted, importsExports);
+    const scriptImportsFormatted = this.importParser.parse(script, importsExports, id);
+    const scriptExportsFormatted = this.exportParser.parse(scriptImportsFormatted, importsExports, id);
 
     return this.wrapperGenerator.wrap(scriptExportsFormatted, importsExports.imports, importsExports.exports);
   }

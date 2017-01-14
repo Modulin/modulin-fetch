@@ -1,18 +1,18 @@
-class ImportParser {
+export default class ImportParser {
 
-  constructor(){
-    this.tokenizer = new ImportTokenizer();
+  constructor(tokenizer){
+    this.tokenizer = tokenizer;
   }
 
-  parse(script, {imports}){
+  parse(script, {imports}, id){
     const [partialScript, lines] = this.extractLines(script);
-    imports.push(...this.tokenizeLines(lines));
+    imports.push(...this.tokenizeLines(lines, id));
 
     return partialScript;
   }
 
   extractLines(script){
-    const importRe = /^import [\s\w"-{}]*?;\s*$\n?/gm;
+    const importRe = /^import [\t \w"-{}.]*?;?[^\n]*/gm;
     const lines = [];
     const partialScript = script.replace(importRe, (line)=>{
       lines.push(line);
@@ -21,13 +21,14 @@ class ImportParser {
     return [partialScript, lines];
   }
 
-  tokenizeLines(lines){
-    return lines.map((line)=>this.tokenize(line));
+  tokenizeLines(lines, id){
+    return lines.map((line)=>this.tokenize(line, id));
   }
 
-  tokenize(line){
+  tokenize(line, id){
+    const path = id.replace(/[^/]*$/, '');
     const defaultMember = this.tokenizer.defaultMember(line);
-    const moduleName = this.tokenizer.module(line);
+    const moduleName = this.tokenizer.module(line, path);
     const globMember = this.tokenizer.globMember(line);
     const mappedMembers = this.tokenizer.mappedMembers(line);
     const members = [defaultMember, globMember, ...mappedMembers]
@@ -51,7 +52,7 @@ class ImportMember {
   }
 }
 
-class ImportStatement {
+export class ImportStatement {
   constructor({id, moduleName, members}){
     this.moduleName = moduleName;
     this.members = members;

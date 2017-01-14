@@ -1,4 +1,6 @@
-class ExportTokenizer {
+import TokenizerUtils from "./TokenizerUtils";
+
+export default class ExportTokenizer {
   /**
    * export {name [as alias], ...}|* [from module|from "module-name"]
    * @param line

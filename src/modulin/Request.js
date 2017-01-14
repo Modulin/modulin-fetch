@@ -1,4 +1,4 @@
-class Request {
+export default class Request {
   constructor({method="GET", url}={}) {
     return new Promise((resolve, reject)=>{
       const xmlhttp = new XMLHttpRequest();

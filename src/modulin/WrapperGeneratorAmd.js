@@ -1,4 +1,4 @@
-class WrapperGeneratorAmd {
+export default class WrapperGeneratorAmd {
 
   constructor({importGenerator, exportGenerator}){
     this.importGenerator = importGenerator;

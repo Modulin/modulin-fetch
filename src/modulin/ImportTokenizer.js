@@ -1,4 +1,6 @@
-class ImportTokenizer {
+import TokenizerUtils from "./TokenizerUtils";
+
+export default class ImportTokenizer {
   defaultMember(line) {
     const type = 'default';
     const defaultMemberRe = /^\s*import\s+(\w+)/;
@@ -10,11 +12,11 @@ class ImportTokenizer {
     return {name, type};
   }
 
-  module(line) {
-    const moduleRe = /(?:from\s+)?(["'])([\w/-]+)\1\s*;?\s*$/;
+  module(line, id) {
+    const moduleRe = /(?:from\s+)?(["'])([\w/\-.]+)\1\s*;?\s*$/;
     const matchResult = line.match(moduleRe);
     const moduleName = matchResult
-      ? matchResult[2]
+      ? TokenizerUtils.resolveRelativePath(id, matchResult[2])
       : null;
 
     return moduleName;

@@ -1,7 +1,7 @@
-class ExportParser {
+export default class ExportParser {
 
-  constructor(){
-    this.tokenizer = new ExportTokenizer();
+  constructor(tokenizer){
+    this.tokenizer = tokenizer;
   }
 
   parse(script, {exports}){
@@ -28,13 +28,12 @@ class ExportParser {
       return '';
     });
 
-    const expressionRe = /^\s*export\s+(default\s+)?([\w{(]+)(?:\s+([\w]+))?/gm;
-    const exporessionScript = preDeclaredVariableScript.replace(expressionRe, (line, isDefault, expression, name) =>{
+    const expressionRe = /^\s*export\s+(default\s+)?(([\w{(]+)(?:\s+([\w]+))?)/gm;
+    const exporessionScript = preDeclaredVariableScript.replace(expressionRe, (line, isDefault, fullExpression, expression, name) =>{
       if(isDefault) {
-        return `exports['default'] = ${expression}`;
+        return `exports['default'] = ${fullExpression}`;
       } else {
-        const alias = name;
-        return `exports['${alias}'] = ${expression}`;
+        return `exports['${name}'] = ${fullExpression}`;
       }
     });
 

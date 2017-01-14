@@ -1,4 +1,4 @@
-class AmdDependencyRepository {
+export default class AmdDependencyRepository {
   constructor({scriptLoader, dependencyResolver}) {
     this.scriptLoader = scriptLoader;
     this.dependencyResolver = dependencyResolver;
@@ -30,11 +30,10 @@ class AmdDependencyRepository {
     }
 
     unloadedDependencies.forEach(path=>{
-      const id = path;
       if(this.loadingModuleIds.indexOf(path) === -1) {
         this.loadingModuleIds.push(path);
         this.scriptLoader
-          .load(`${path}.js`, id)
+          .load(`${path}.js`, path)
           .then((script) => {
             const index = this.loadingModuleIds.indexOf(path);
             index !== -1 && this.loadingModuleIds.splice(index, 1);

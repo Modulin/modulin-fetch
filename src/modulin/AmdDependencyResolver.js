@@ -1,4 +1,4 @@
-class AmdDependencyResolver {
+export default class AmdDependencyResolver {
   resolve({pendingModules, modules}) {
 
     for(let i = 0; i < pendingModules.length; i++){
