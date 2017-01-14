@@ -1,14 +1,14 @@
 class ImportParser {
 
   constructor(){
-    this.tokenizer = new Tokenizer();
+    this.tokenizer = new ImportTokenizer();
   }
 
-  parse(script){
+  parse(script, {imports}){
     const [partialScript, lines] = this.extractLines(script);
-    const imports = this.tokenizeLines(lines);
+    imports.push(...this.tokenizeLines(lines));
 
-    return [partialScript, imports];
+    return partialScript;
   }
 
   extractLines(script){
@@ -52,8 +52,9 @@ class ImportMember {
 }
 
 class ImportStatement {
-  constructor({moduleName, members}){
+  constructor({id, moduleName, members}){
     this.moduleName = moduleName;
     this.members = members;
+    this.id = id;
   }
 }

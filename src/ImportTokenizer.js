@@ -1,7 +1,7 @@
-class Tokenizer {
+class ImportTokenizer {
   defaultMember(line) {
     const type = 'default';
-    const defaultMemberRe = /^import\s+(\w+)/;
+    const defaultMemberRe = /^\s*import\s+(\w+)/;
     const matchResult = line.match(defaultMemberRe);
     const name = matchResult
       ? matchResult[1]
@@ -11,7 +11,7 @@ class Tokenizer {
   }
 
   module(line) {
-    const moduleRe = /(?:from\s+)?(["'])([\w/-]+)\1;?\s*$/;
+    const moduleRe = /(?:from\s+)?(["'])([\w/-]+)\1\s*;?\s*$/;
     const matchResult = line.match(moduleRe);
     const moduleName = matchResult
       ? matchResult[2]
@@ -40,25 +40,8 @@ class Tokenizer {
 
     return mappedMemberMatch
       .split(',')
-      .filter((it)=>this.filterEmpty(it))
-      .map((match)=>this.splitMemberAndAlias(match));
+      .filter((it)=>TokenizerUtils.filterEmpty(it))
+      .map((match)=>TokenizerUtils.splitMemberAndAlias(match));
   }
 
-  splitMemberAndAlias(string){
-    const splitRe = /\s+as\s+/g;
-    const type = 'mapped';
-    const [name, alias] = string
-      .split(splitRe)
-      .map(trim);
-
-    return {name, alias, type};
-
-    function trim(str){
-      return str.trim();
-    }
-  }
-
-  filterEmpty(str){
-    return !!str.trim();
-  }
 }

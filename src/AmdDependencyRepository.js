@@ -5,7 +5,7 @@ class AmdDependencyRepository {
 
     this.loadingModuleIds = [];
     this.pendingModules = [];
-    this.resolvedModules = [];
+    this.resolvedModules = [{id: 'exports'}];
   }
 
   register(module) {

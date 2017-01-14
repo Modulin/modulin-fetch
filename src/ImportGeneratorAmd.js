@@ -3,17 +3,8 @@ class ImportGeneratorAmd {
     this.counter = 0;
   }
 
-  generate(script, importStatements) {
-    const res = this.wrap(script, importStatements);
-    return res;
-  }
-
-  generateId() {
-    return `__DEP${++this.counter}`
-  }
-
-  wrap(script, importStatements) {
-    const processedImportStatements = importStatements.map(statement => ({id: this.generateId(), statement}));
+  generate(importStatements) {
+    const processedImportStatements = importStatements.map(statement => ({id: statement.id || this.generateId(), statement}));
 
     const dependencies = processedImportStatements
       .map(s=>s.statement.moduleName)
@@ -25,27 +16,38 @@ class ImportGeneratorAmd {
       .join(',');
 
     const mappedDependencies = processedImportStatements
-      .map(s=>s.statement.members
-        .map(member=>{
-          const id = s.id;
-          const name = member.name;
-          const alias = member.alias || name;
-
-          switch(member.type) {
-            case "default":
-              return `var ${alias} = ${id}["default"]`;
-            case "all":
-              return `var ${alias} = ${id}`;
-            case "mapped":
-              return `var ${alias} = ${id}["${name}"]`;
-            default:
-              return '';
-          }
-        })
-        .join(';')
-      )
+      .map(({id, statement})=>this.formatImportMembers(id, statement.members))
+      .filter(TokenizerUtils.filterEmpty)
       .join(';\n  ');
 
-    return `define([${dependencies}], function(${dependencyNames}){ ${mappedDependencies}\n${script}});`
+    return {
+      dependencyList: `[${dependencies}]`,
+      dependencyArguments: dependencyNames,
+      dependencyMappings: mappedDependencies
+    }
+  }
+
+  generateId() {
+    return `__DEP${++this.counter}`
+  }
+
+  formatImportMembers(id, members) {
+    return members.map((member)=>this.formatImportMember(id, member)).join(';');
+  }
+
+  formatImportMember(id, member){
+    const name = member.name;
+    const alias = member.alias || name;
+
+    switch(member.type) {
+      case "default":
+        return `var ${alias} = ${id}.exports["default"]`;
+      case "all":
+        return `var ${alias} = ${id}.exports`;
+      case "mapped":
+        return `var ${alias} = ${id}.exports["${name}"]`;
+      default:
+        return '';
+    }
   }
 }

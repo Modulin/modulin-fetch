@@ -7,19 +7,22 @@ class ScriptLoader {
   load(path, id) {
     const url = `${this.basePath}${path}`;
     return new Request({url})
-      .then(source=>new Script(this.intercept(source), id));
+      .then(source=>new Script(this.intercept(source), url, id));
   }
 }
 
 class Script {
 
-  constructor(source, id) {
+  constructor(source, url, id) {
     this.id = id;
+    this.url = url;
     this.source = source;
   }
 
   execute() {
-    const source = `define.__scriptSource = "${this.id}"; ${this.source}`;
+    const origin = document.location.origin;
+    const url = `${origin}/${this.url}`;
+    const source = `define.__scriptSource = "${this.id}"; ${this.source}\n//# sourceURL=${url}`;
     eval(source);
   }
 

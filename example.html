@@ -4,32 +4,44 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <script src="src/Request.js"></script>
+    <script src="src/TokenizerUtils.js"></script>
 
     <script src="src/ImportTokenizer.js"></script>
+    <script src="src/ExportTokenizer.js"></script>
+
     <script src="src/ImportParser.js"></script>
+    <script src="src/ExportParser.js"></script>
+
     <script src="src/ImportGeneratorAmd.js"></script>
+    <script src="src/WrapperGeneratorAmd.js"></script>
+    <script src="src/ExportGeneratorAmd.js"></script>
 
-    <script src="src/ScriptLoader.js"></script>
-
+    <script src="src/AmdFactory.js"></script>
     <script src="src/AmdDependencyRepository.js"></script>
     <script src="src/AmdDependencyResolver.js"></script>
-    <script src="src/Amd.js"></script>
+
+    <script src="src/ScriptLoader.js"></script>
+    <script src="src/Modulin.js"></script>
 </head>
 <body>
 <script>
-  const basePath = 'examples';
-  const importParser = new ImportParser();
-  const importGenerator = new ImportGeneratorAmd();
-  const intercept = (script) => {
-    const scriptImportsStripped = importParser.parse(script);
-    const scriptImportsResolved = importGenerator.generate(...scriptImportsStripped);
+  const modulin = new Modulin({
+    importParser: new ImportParser(),
+    exportParser: new ExportParser(),
+    loaderFactory: new AmdFactory(),
+    wrapperGenerator: new WrapperGeneratorAmd({
+      importGenerator: new ImportGeneratorAmd(),
+      exportGenerator: new ExportGeneratorAmd()
+    }),
+    dependencyRepository: new AmdDependencyRepository({
+      scriptLoader: new ScriptLoader({
+        basePath: 'examples'
+      }),
+      dependencyResolver: new AmdDependencyResolver()
+    })
+  });
 
-    return scriptImportsResolved;
-  };
-  const scriptLoader = new ScriptLoader({basePath, intercept});
-  const dependencyResolver = new AmdDependencyResolver();
-  const amd = new AmdDependencyRepository({scriptLoader, dependencyResolver});
-  window.define = generateDefine(amd);
+  window.define = modulin.createLoader();
 
   define(['/test1'], {});
 </script>
