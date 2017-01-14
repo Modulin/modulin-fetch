@@ -22,25 +22,11 @@
 
     <script src="src/ScriptLoader.js"></script>
     <script src="src/Modulin.js"></script>
+
+    <script src="src/main.js"></script>
 </head>
 <body>
 <script>
-  const modulin = new Modulin({
-    importParser: new ImportParser(),
-    exportParser: new ExportParser(),
-    loaderFactory: new AmdFactory(),
-    wrapperGenerator: new WrapperGeneratorAmd({
-      importGenerator: new ImportGeneratorAmd(),
-      exportGenerator: new ExportGeneratorAmd()
-    }),
-    dependencyRepository: new AmdDependencyRepository({
-      scriptLoader: new ScriptLoader({
-        basePath: 'examples'
-      }),
-      dependencyResolver: new AmdDependencyResolver()
-    })
-  });
-
   window.define = modulin.createLoader();
 
   define(['/test1'], {});
