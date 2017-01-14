@@ -9,7 +9,7 @@ export default class ScriptLoader {
   load(path, id) {
     const url = `${this.basePath}${path}`;
     return new Request({url})
-      .then(source=>new Script(this.intercept(source, id), url, id));
+      .then(source=>new Script(this.intercept(source, url, id), url, id));
   }
 }
 
@@ -22,10 +22,7 @@ class Script {
   }
 
   execute() {
-    const origin = document.location.origin;
-    const url = `${origin}/${this.url}`;
-    const source = `define.amd.__scriptSource = "${this.id}"; ${this.source}\n//# sourceURL=${url}`;
-    eval(source);
+    eval(this.source);
   }
 
 }

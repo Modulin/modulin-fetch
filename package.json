@@ -1,0 +1,13 @@
+{
+  "name": "modulin",
+  "version": "0.1.0",
+  "repository": "https://github.com/RikardLegge/modulin.git",
+  "author": "Rikard Legge <rikard.legge@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "rollup": "^0.41.3"
+  },
+  "scripts": {
+    "build": "rollup -f iife -o build/modulin.js -i src/main.js -n modulin"
+  }
+}

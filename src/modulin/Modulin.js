@@ -2,7 +2,8 @@ import {ImportStatement} from "./ImportParser"
 
 export default class Modulin {
 
-  constructor({importParser, exportParser, wrapperGenerator, dependencyRepositoryFactory, loaderFactory}){
+  constructor({config={}, importParser, exportParser, wrapperGenerator, dependencyRepositoryFactory, loaderFactory}){
+    this.config = config;
     this.importParser = importParser;
     this.exportParser = exportParser;
     this.wrapperGenerator = wrapperGenerator;
@@ -19,13 +20,17 @@ export default class Modulin {
     return this.intercept.bind(this);
   }
 
-  intercept(script, id) {
+  intercept(script, url, id) {
     const importsExports = {imports : [...this.defautImports], exports: [...this.defaultExports]};
 
     const scriptImportsFormatted = this.importParser.parse(script, importsExports, id);
     const scriptExportsFormatted = this.exportParser.parse(scriptImportsFormatted, importsExports, id);
 
-    return this.wrapperGenerator.wrap(scriptExportsFormatted, importsExports.imports, importsExports.exports);
+    const wrappedSource = this.wrapperGenerator.wrap(scriptExportsFormatted, importsExports.imports, importsExports.exports);
+
+    const origin = document.location.origin;
+    const absUrl = `${origin}/${this.url}`;
+    return `define.amd.__scriptSource = "${id}"; ${wrappedSource}\n//# sourceURL=${absUrl}`;
   }
 
   createLoader(basePath) {
