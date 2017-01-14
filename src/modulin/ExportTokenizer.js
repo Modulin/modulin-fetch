@@ -22,4 +22,19 @@ class ExportTokenizer {
     return {members, allMembers, module, moduleIsString};
   }
 
+  variableDeclaration(line) {
+    const variableDeclarationRe = /^\s*export\s+\w+\s+([^\n]+);/;
+    const matchResult = line.match(variableDeclarationRe);
+
+    if(!matchResult)
+      throw "";
+
+    const members = matchResult[1]
+      .split(',')
+      .filter((it)=>TokenizerUtils.filterEmpty(it))
+      .map((match)=>TokenizerUtils.splitVariableAndValue(match));
+
+    return {members};
+  }
+
 }

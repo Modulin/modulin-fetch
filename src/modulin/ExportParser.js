@@ -14,14 +14,14 @@ class ExportParser {
   extractLines(script){
     const lines = [];
 
-    const variableDeclarationRe = /^\s*export\s+((?:let|var|const)\s+)/gm;
+    const variableDeclarationRe = /^\s*export\s+((?:let|var|const)\s+[^\n]+)/gm;
     const variableDeclarationScript = script.replace(variableDeclarationRe, (line, variable) =>{
       const type = 'variableDeclaration';
       lines.push({type, line});
       return variable;
     });
 
-    const predeclaredVariableRe = /^\s*export\s+(?:{[\w\s,]*}|\*)[^\n]*\n?/gm;
+    const predeclaredVariableRe = /^\s*export\s+(?:{[\w\s,-]*}|\*)[^\n]*\n?/gm;
     const preDeclaredVariableScript = variableDeclarationScript.replace(predeclaredVariableRe, line =>{
       const type = 'preDeclaredVariable';
       lines.push({type, line});
@@ -36,10 +36,12 @@ class ExportParser {
         const alias = name;
         return `exports['${alias}'] = ${expression}`;
       }
-
     });
 
-    return [exporessionScript, lines];
+    const allRe = /^\s*export\s+\w[^\n]*/gm;
+    const validatedScript = exporessionScript.replace(allRe, (line)=>{ throw `Invalid export: ${line}`; });
+
+    return [validatedScript, lines];
   }
 
   tokenizeLines(lines){
@@ -47,17 +49,16 @@ class ExportParser {
   }
 
   tokenize({type, line}){
+    let properties;
     switch(type){
       case 'variableDeclaration':
-        debugger;
+        properties = this.tokenizer.variableDeclaration(line);
+
         return new ExportStatement({
           type: 'variable',
-          // members: properties.members.map((member)=>new ExportMember(member)),
-          // module: properties.module,
-          // moduleIsString: properties.moduleIsString
+          members: properties.members.map((member)=>new ExportMember(member))
         });
       case 'preDeclaredVariable':
-        let properties;
         properties = this.tokenizer.preDeclaredVariables(line);
 
         return new ExportStatement({

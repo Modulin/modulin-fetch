@@ -18,4 +18,8 @@ import {d, e} from 'tests/simpleExport';
 console.assert(typeof d === 'function');
 console.assert(typeof e === 'function');
 
+import {i, j} from 'tests/simpleExport';
+console.assert(i === 'i');
+console.assert(j === 'j');
+
 console.log("Simple import tests complete");
