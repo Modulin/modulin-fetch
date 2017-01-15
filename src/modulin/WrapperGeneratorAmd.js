@@ -13,9 +13,8 @@ export default class WrapperGeneratorAmd {
     const absoluteUrl = `${origin}/${script.url}`;
 
     const scriptSource = script.source;
-    const defineWrappedSource = `define(${dependencyList}, function(${dependencyArguments}){ ${dependencyMappings}\n${scriptSource}\n${exportMappings}\n});`;
-    const namedSource = `define.amd.__scriptSource = "${script.id}"; ${defineWrappedSource};`;
-    const sourceMappedSource = `${namedSource}\n//# sourceURL=${absoluteUrl}`;
+    const defineWrappedSource = `define("${script.id}", ${dependencyList}, function(${dependencyArguments}){ ${dependencyMappings}\n${scriptSource}\n${exportMappings}\n});`;
+    const sourceMappedSource = `${defineWrappedSource}\n//# sourceURL=${absoluteUrl}`;
 
     script.source = sourceMappedSource;
   }

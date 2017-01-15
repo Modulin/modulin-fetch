@@ -27,14 +27,14 @@ export default class AmdFactory {
     function normalizeInput(id, dependencies, factory) {
       if (typeof id === 'function' || id.constructor.name === 'Object') {
         return {
-          id: define.amd.__scriptSource,
+          id: "UNKNOWN",
           dependencies: [],
           factory: id
         };
       }
       else if (id.constructor.name === 'Array') {
         return {
-          id: define.amd.__scriptSource,
+          id: "UNKNOWN",
           dependencies: id,
           factory: dependencies
         };
