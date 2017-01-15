@@ -5,10 +5,18 @@ export default class WrapperGeneratorAmd {
     this.exportGenerator = exportGenerator;
   }
 
-  wrap(script, imports, exports) {
+  wrap({script, imports, exports}) {
     const {dependencyList, dependencyArguments, dependencyMappings} = this.importGenerator.generate(imports);
     const {exportMappings} = this.exportGenerator.generate(exports);
 
-    return `define(${dependencyList}, function(${dependencyArguments}){ ${dependencyMappings}\n${script}\n${exportMappings}\n});`;
+    const origin = document.location.origin;
+    const absoluteUrl = `${origin}/${script.url}`;
+
+    const scriptSource = script.source;
+    const defineWrappedSource = `define(${dependencyList}, function(${dependencyArguments}){ ${dependencyMappings}\n${scriptSource}\n${exportMappings}\n});`;
+    const namedSource = `define.amd.__scriptSource = "${script.id}"; ${defineWrappedSource};`;
+    const sourceMappedSource = `${namedSource}\n//# sourceURL=${absoluteUrl}`;
+
+    script.source = sourceMappedSource;
   }
 }

@@ -16,7 +16,7 @@ export default class AmdDependencyResolver {
     }
   }
 
-  implicitDependencies(dependency, module) {
+  getDefaultDependency(dependency, module) {
     switch(dependency) {
       case 'exports':
         return module.exports;
@@ -24,7 +24,7 @@ export default class AmdDependencyResolver {
   }
 
   dependencyToModule(module , modules) {
-    return (dep => this.implicitDependencies(dep, module) || modules.find(module => dep === module.id));
+    return (dep => this.getDefaultDependency(dep, module) || modules.find(module => dep === module.id));
   }
 
   getDependencies(module, modules) {

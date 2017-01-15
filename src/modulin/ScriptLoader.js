@@ -1,29 +1,18 @@
-import Request from "./Request";
+import Script from "./Script";
 
 export default class ScriptLoader {
-  constructor({basePath, intercept}={}){
+  constructor({basePath, intercept, fetch}){
     this.basePath = basePath;
     this.intercept = intercept;
+    this.fetch = fetch;
   }
 
   load(path, id) {
     const url = `${this.basePath}${path}`;
-    return new Request({url})
-      .then(source=>new Script(this.intercept(source, url, id), url, id));
+    return this.fetch(url)
+      .then(source=>this.intercept(new Script(source, url, id)));
   }
 }
 
-class Script {
 
-  constructor(source, url, id) {
-    this.id = id;
-    this.url = url;
-    this.source = source;
-  }
-
-  execute() {
-    eval(this.source);
-  }
-
-}
 

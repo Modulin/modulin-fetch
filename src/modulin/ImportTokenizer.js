@@ -12,11 +12,11 @@ export default class ImportTokenizer {
     return {name, type};
   }
 
-  module(line, id) {
+  module(line, script) {
     const moduleRe = /(?:from\s+)?(["'])([\w/\-.]+)\1\s*;?\s*$/;
     const matchResult = line.match(moduleRe);
     const moduleName = matchResult
-      ? TokenizerUtils.resolveRelativePath(id, matchResult[2])
+      ? TokenizerUtils.resolveRelativePath(script.path, matchResult[2])
       : null;
 
     return moduleName;

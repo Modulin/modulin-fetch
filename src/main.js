@@ -1,4 +1,5 @@
 import Modulin from './modulin/Modulin';
+import Request from "./modulin/Request";
 import ScriptLoader from './modulin/ScriptLoader';
 
 import ImportParser from './modulin/ImportParser';
@@ -23,6 +24,7 @@ export default new Modulin({
   }),
   dependencyRepositoryFactory: ({intercept, basePath})=> new AmdDependencyRepository({
     scriptLoader: new ScriptLoader({
+      fetch: (url)=>new Request({url}),
       intercept,
       basePath
     }),
