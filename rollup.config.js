@@ -3,7 +3,7 @@ import uglify from 'rollup-plugin-uglify';
 
 export default {
   entry: 'src/main.js',
-  dest: 'dist/modulin.js',
+  dest: 'dist/modulin.min.js',
   format: 'iife',
   moduleName: 'modulin',
 
