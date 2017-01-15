@@ -1,6 +1,6 @@
-import TokenizerUtils from "./TokenizerUtils";
+import TokenizerUtils from "../TokenizerUtils";
 
-export default class ImportGeneratorAmd {
+export default class AmdWrapperGenerator {
   constructor(){
     this.counter = 0;
   }

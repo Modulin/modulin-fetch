@@ -2,15 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Run tests</title>
+    <title>Self load test</title>
     <script src="dist/modulin.amd.min.js"></script>
 </head>
 <body>
 <script>
   window.define = modulin.createLoader("src/modulin/");
   define(['main-amd'], function (modulin) {
-    window.define = modulin.exports.default.createLoader("src/");
-    define(['tests/simpleImport'], {});
+    window.define = modulin.exports.default.createLoader("src/examples/");
+    define(['test1'], {});
   });
 </script>
 </body>

@@ -2,8 +2,8 @@ import babel from 'rollup-plugin-babel';
 import uglify from 'rollup-plugin-uglify';
 
 export default {
-  entry: 'src/main.js',
-  dest: 'dist/modulin.min.js',
+  entry: 'src/modulin/main-amd.js',
+  dest: 'dist/modulin.amd.min.js',
   format: 'iife',
   moduleName: 'modulin',
 

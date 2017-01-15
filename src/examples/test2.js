@@ -1,3 +1,3 @@
-import test3 from 'examples/test3';
+import test3 from './test3';
 
 console.log('test2');
