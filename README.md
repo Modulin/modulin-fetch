@@ -1,4 +1,6 @@
-# modulin
+<p align="center"><a><img width="102"src="https://github.com/RikardLegge/modulin/blob/master/resources/logo.png"></a></p>
+
+# Modulin
 A light weight javascript browser import polyfill
 
 The project was started after some rebelling of all the tooling which is required today to setup a minial development environment. It currently supports a large subset of the different types of import/export statements but does not follow the standard for live variables. (A description can be found at http://exploringjs.com/es6/ch_modules.html)
