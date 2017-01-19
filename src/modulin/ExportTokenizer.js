@@ -1,68 +1,73 @@
 import TokenizerUtils from "./TokenizerUtils";
+import ExportStatement from "./ExportStatement";
 
 export default class ExportTokenizer {
 
-  extractVariableDeclaration(scriptSource, lines) {
-    const type = 'variableDeclaration';
+  extractVariableDeclaration(scriptSource) {
+    const type = 'variable';
+    const variableDeclarationRe = /^export\s+((?:let|var|const)\s+(.+))/;
+    const matchResult = scriptSource.match(variableDeclarationRe);
+    const [matched, expression, variableString] = matchResult
+      ? matchResult
+      : [];
 
-    const variableDeclarationRe = /^export\s+((?:let|var|const)\s+[^\n]+)/gm;
-    const variableDeclarationSource = scriptSource.replace(variableDeclarationRe, (line, variable) =>{
-      lines.push({type, line});
-      return variable;
-    });
-
-    return variableDeclarationSource;
+    if(matched) {
+      const memberDeclarations = this.splitVariableDeclarations(variableString);
+      const members = memberDeclarations.map((member)=>new ExportMember(member));
+      return new ExportStatement({ type, members, expression });
+    }
   }
 
-  extractPreDeclaredVariables(scriptSource, lines) {
-    const type = 'preDeclaredVariable';
+  extractPreDeclaredVariables(scriptSource) {
+    const type = 'mapped';
+    const predeclaredVariableRe = /^export\s+\{(?:([\s\w,]*)|(\*))}(?:\s+from\s+(["'])?([\w\-/]+)\3)?/;
+    const matchResult = scriptSource.match(predeclaredVariableRe);
+    const [matched, variableString, allMembers, moduleIsString, module] = matchResult
+      ? matchResult
+      : [];
 
-    const predeclaredVariableRe = /^export\s+(?:{[\w\s,-]*}|\*)[^\n]*/gm;
-    const preDeclaredVariableSource = scriptSource.replace(predeclaredVariableRe, line =>{
-      lines.push({type, line});
-      return '';
-    });
-
-    return preDeclaredVariableSource;
+    if(matched) {
+      const memberDeclarations = this.splitVariableAliases(variableString);
+      const members = memberDeclarations.map((member)=>new ExportMember(member));
+      return new ExportStatement({ type, members, module, moduleIsString});
+    }
   }
 
-  extractExpression(scriptSource, lines) {
+  extractExpression(scriptSource) {
+    const expressionRe = /^export\s+(default\s+)?((function|class)?[\w{(]+(?:\s+([\w]+))?.*)$/;
+    const matchResult = scriptSource.match(expressionRe);
+    const [matched, isDefault, fullExpression, isDeclaration, name] = matchResult
+      ? matchResult
+      : [];
 
-    const expressionRe = /^export\s+(default\s+)?(((function|class)?[\w{(]+)(?:\s+([\w]+))?)/gm;
-    const exporessionSource = scriptSource.replace(expressionRe, (line, isDefault, fullExpression, expression, isDeclaration, name) =>{
-      const type = isDefault
-        ? 'defaultExpression'
-        : 'expression';
-
+    if(matched) {
       const immediateDeclaration = isDefault && !isDeclaration;
       const missingName = !name;
 
+      let type;
+      let members = [];
+      let expression;
+
       if(immediateDeclaration || missingName) {
-        return `exports['default'] = ${fullExpression}`;
+        type = 'resolved';
+        expression = `exports['default'] = ${fullExpression}`;
       } else {
-        lines.push({type, name});
-        return `${fullExpression}`;
+        const alias = isDefault ? 'default' : null;
+
+        type = 'mapped';
+        expression = `${fullExpression}`;
+        members.push(new ExportMember({ type, name, alias }));
       }
-    });
 
-    return exporessionSource;
+      return new ExportStatement({ type, members, expression });
+
+    }
   }
 
-  validateScriptSource(scriptSource) {
-    const allRe = /^export[\t ].*$/gm;
-    const validatedSource = scriptSource.replace(allRe, (line)=>{ throw `Invalid export: ${line}`; });
-
-    return validatedSource;
-  }
-
-  replaceExport(line, exports) {
-    let processingSource = line;
-    processingSource = this.extractVariableDeclaration(processingSource, exports);
-    processingSource = this.extractPreDeclaredVariables(processingSource, exports);
-    processingSource = this.extractExpression(processingSource, exports);
-    processingSource = this.validateScriptSource(processingSource, exports);
-
-    return processingSource;
+  replaceExport(line) {
+    return this.extractVariableDeclaration(line)
+      ||   this.extractPreDeclaredVariables(line)
+      ||   this.extractExpression(line);
   }
 
   extractExports(script) {
@@ -71,48 +76,38 @@ export default class ExportTokenizer {
 
     script.source = script.source.replace(exportRe, (line, normalizedLine)=>{
       const exportStatement = this.replaceExport(normalizedLine, exports);
-      return exportStatement;
+      exports.push(exportStatement);
+      return exportStatement.expression || '';
     });
 
     return exports;
   }
 
-  /**
-   * export {name [as alias], ...}|* [from module|from "module-name"]
-   * @param line
-   * @returns {*}
-   */
-  preDeclaredVariables(line) {
-    const defaultMemberRe = /^\s*export\s+\{(?:([\s\w,]*)|(\*))}(?:\s+from\s+(["'])?([\w\-/]+)\3)?\s*;?\s*$/;
-    const matchResult = line.match(defaultMemberRe);
 
-    if(!matchResult)
-      throw "";
-
-    const module =  matchResult[4];
-    const moduleIsString = !!matchResult[3];
-    const allMembers = !!matchResult[2];
-    const members = matchResult[1]
+  splitVariableAliases(variableString) {
+    const members = variableString
       .split(',')
       .filter((it)=>TokenizerUtils.filterEmpty(it))
       .map((match)=>TokenizerUtils.splitMemberAndAlias(match));
 
-    return {members, allMembers, module, moduleIsString};
+    return members;
   }
 
-  variableDeclaration(line) {
-    const variableDeclarationRe = /^\s*export\s+\w+\s+([^\n]+);/;
-    const matchResult = line.match(variableDeclarationRe);
-
-    if(!matchResult)
-      throw "";
-
-    const members = matchResult[1]
+  splitVariableDeclarations(variableString) {
+    const members = variableString
       .split(',')
       .filter((it)=>TokenizerUtils.filterEmpty(it))
       .map((match)=>TokenizerUtils.splitVariableAndValue(match));
 
-    return {members};
+    return members;
   }
 
+}
+
+class ExportMember {
+  constructor({name, alias, type}){
+    this.name = name;
+    this.alias = alias;
+    this.type = type;
+  }
 }
