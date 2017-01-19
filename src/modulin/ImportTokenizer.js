@@ -1,6 +1,18 @@
 import TokenizerUtils from "./TokenizerUtils";
 
 export default class ImportTokenizer {
+  extractImports(script) {
+    const importRe = /^import [\s\w"-{}.]*?;?[^\n]*/gm;
+    const lines = [];
+
+    script.source = script.source.replace(importRe, (line)=>{
+      lines.push({line});
+      return '';
+    });
+
+    return lines;
+  }
+
   defaultMember(line) {
     const type = 'default';
     const defaultMemberRe = /^\s*import\s+(\w+)/;

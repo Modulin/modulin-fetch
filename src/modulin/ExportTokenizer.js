@@ -1,13 +1,80 @@
 import TokenizerUtils from "./TokenizerUtils";
 
 export default class ExportTokenizer {
+
+  extractVariableDeclaration(scriptSource, lines) {
+    const type = 'variableDeclaration';
+
+    const variableDeclarationRe = /^\s*export\s+((?:let|var|const)\s+[^\n]+)/gm;
+    const variableDeclarationSource = scriptSource.replace(variableDeclarationRe, (line, variable) =>{
+      lines.push({type, line});
+      return variable;
+    });
+
+    return variableDeclarationSource;
+  }
+
+  extractPreDeclaredVariables(scriptSource, lines) {
+    const type = 'preDeclaredVariable';
+
+    const predeclaredVariableRe = /^\s*export\s+(?:{[\w\s,-]*}|\*)[^\n]*/gm;
+    const preDeclaredVariableSource = scriptSource.replace(predeclaredVariableRe, line =>{
+      lines.push({type, line});
+      return '';
+    });
+
+    return preDeclaredVariableSource;
+  }
+
+  extractExpression(scriptSource, lines) {
+
+    const expressionRe = /^\s*export\s+(default\s+)?(((function|class)?[\w{(]+)(?:\s+([\w]+))?)/gm;
+    const exporessionSource = scriptSource.replace(expressionRe, (line, isDefault, fullExpression, expression, isDeclaration, name) =>{
+      const type = isDefault
+        ? 'defaultExpression'
+        : 'expression';
+
+      const immediateDeclaration = isDefault && !isDeclaration;
+      const missingName = !name;
+
+      if(immediateDeclaration || missingName) {
+        return `exports['default'] = ${fullExpression}`;
+      } else {
+        lines.push({type, name});
+        return `${fullExpression}`;
+      }
+    });
+
+    return exporessionSource;
+  }
+
+  validateScriptSource(scriptSource) {
+    const allRe = /^\s*export\s+\w[^\n]*/gm;
+    const validatedSource = scriptSource.replace(allRe, (line)=>{ throw `Invalid export: ${line}`; });
+
+    return validatedSource;
+  }
+
+  extractExports(script) {
+    let processingSource = script.source;
+    const exports = [];
+
+    processingSource = this.extractVariableDeclaration(processingSource, exports);
+    processingSource = this.extractPreDeclaredVariables(processingSource, exports);
+    processingSource = this.extractExpression(processingSource, exports);
+    processingSource = this.validateScriptSource(processingSource, exports);
+
+    script.source = processingSource;
+    return exports;
+  }
+
   /**
    * export {name [as alias], ...}|* [from module|from "module-name"]
    * @param line
    * @returns {*}
    */
   preDeclaredVariables(line) {
-    const defaultMemberRe = /^\s*export\s+\{(?:([\s\w,]*)|(\*))}(?:\s+from\s+(["'])?([\w\-/]+)\3)?\s*;?\s*$\n?/;
+    const defaultMemberRe = /^\s*export\s+\{(?:([\s\w,]*)|(\*))}(?:\s+from\s+(["'])?([\w\-/]+)\3)?\s*;?\s*$/;
     const matchResult = line.match(defaultMemberRe);
 
     if(!matchResult)

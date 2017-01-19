@@ -5,24 +5,12 @@ export default class ImportParser {
   }
 
   rewrite({script, imports}){
-    const lines = this.extractLines(script);
+    const lines = this.tokenizer.extractImports(script);
     imports.push(...this.tokenizeLines(lines, script));
   }
 
-  extractLines(script){
-    const importRe = /^import [\t \w"-{}.]*?;?[^\n]*/gm;
-    const lines = [];
-
-    script.source = script.source.replace(importRe, (line)=>{
-      lines.push(line);
-      return '';
-    });
-
-    return lines;
-  }
-
   tokenizeLines(lines, script){
-    return lines.map((line)=>this.tokenize(line, script));
+    return lines.map((line)=>this.tokenize(line.line, script));
   }
 
   tokenize(line, script){
