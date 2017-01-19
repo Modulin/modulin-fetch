@@ -5,12 +5,18 @@ export default class AmdDependencyResolver {
       const module = pendingModules[i];
 
       if(this.hasMetDependencies(module, modules)) {
-        const exports = module.factory(...this.getDependencies(module, modules));
-        if(exports)
-          module.exports = exports;
-
-        modules.push(module);
         pendingModules.splice(i, 1);
+
+        try {
+          const exports = module.factory(...this.getDependencies(module, modules));
+          if(exports)
+            module.exports = exports;
+
+          modules.push(module);
+        } catch(exception) {
+          console.error(`Failed to load module ${module.id}`, exception);
+        }
+
         i = -1;
       }
     }
