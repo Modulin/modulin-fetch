@@ -10,7 +10,7 @@
   window.define = modulin.createLoader("src/modulin/");
   define(['main-amd'], function (modulin) {
     window.define = modulin.exports.default.createLoader("src/examples/");
-    define(['test1'], {});
+    define(['test1'], ()=>document.body.style.backgroundColor = "green");
   });
 </script>
 </body>

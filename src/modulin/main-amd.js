@@ -1,3 +1,5 @@
+import '../polyfills/polyfills';
+
 import Modulin from './Modulin';
 import Request from "./Request";
 import ScriptLoader from './ScriptLoader';
