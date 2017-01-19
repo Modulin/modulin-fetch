@@ -55,16 +55,25 @@ export default class ExportTokenizer {
     return validatedSource;
   }
 
-  extractExports(script) {
-    let processingSource = script.source;
-    const exports = [];
-
+  replaceExport(line, exports) {
+    let processingSource = line;
     processingSource = this.extractVariableDeclaration(processingSource, exports);
     processingSource = this.extractPreDeclaredVariables(processingSource, exports);
     processingSource = this.extractExpression(processingSource, exports);
     processingSource = this.validateScriptSource(processingSource, exports);
 
-    script.source = processingSource;
+    return processingSource;
+  }
+
+  extractExports(script) {
+    const exportRe = /^[\t ]*(export[\t ]*[{*\w][^\n]*);?[\t ]*$/gm;
+    const exports = [];
+
+    script.source = script.source.replace(exportRe, (line, normalizedLine)=>{
+      const exportStatement = this.replaceExport(normalizedLine, exports);
+      return exportStatement;
+    });
+
     return exports;
   }
 
