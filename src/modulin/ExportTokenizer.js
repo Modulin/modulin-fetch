@@ -5,7 +5,7 @@ export default class ExportTokenizer {
   extractVariableDeclaration(scriptSource, lines) {
     const type = 'variableDeclaration';
 
-    const variableDeclarationRe = /^\s*export\s+((?:let|var|const)\s+[^\n]+)/gm;
+    const variableDeclarationRe = /^export\s+((?:let|var|const)\s+[^\n]+)/gm;
     const variableDeclarationSource = scriptSource.replace(variableDeclarationRe, (line, variable) =>{
       lines.push({type, line});
       return variable;
@@ -17,7 +17,7 @@ export default class ExportTokenizer {
   extractPreDeclaredVariables(scriptSource, lines) {
     const type = 'preDeclaredVariable';
 
-    const predeclaredVariableRe = /^\s*export\s+(?:{[\w\s,-]*}|\*)[^\n]*/gm;
+    const predeclaredVariableRe = /^export\s+(?:{[\w\s,-]*}|\*)[^\n]*/gm;
     const preDeclaredVariableSource = scriptSource.replace(predeclaredVariableRe, line =>{
       lines.push({type, line});
       return '';
@@ -28,7 +28,7 @@ export default class ExportTokenizer {
 
   extractExpression(scriptSource, lines) {
 
-    const expressionRe = /^\s*export\s+(default\s+)?(((function|class)?[\w{(]+)(?:\s+([\w]+))?)/gm;
+    const expressionRe = /^export\s+(default\s+)?(((function|class)?[\w{(]+)(?:\s+([\w]+))?)/gm;
     const exporessionSource = scriptSource.replace(expressionRe, (line, isDefault, fullExpression, expression, isDeclaration, name) =>{
       const type = isDefault
         ? 'defaultExpression'
@@ -49,7 +49,7 @@ export default class ExportTokenizer {
   }
 
   validateScriptSource(scriptSource) {
-    const allRe = /^\s*export\s+\w[^\n]*/gm;
+    const allRe = /^export[\t ].*$/gm;
     const validatedSource = scriptSource.replace(allRe, (line)=>{ throw `Invalid export: ${line}`; });
 
     return validatedSource;
