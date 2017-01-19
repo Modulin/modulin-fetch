@@ -2,11 +2,11 @@ import TokenizerUtils from "./TokenizerUtils";
 
 export default class ImportTokenizer {
   extractImports(script) {
-    const importRe = /^import [\s\w"-{}.]*?;?[^\n]*/gm;
+    const importRe = /^[\t ]*(import [\t \w"'-{}._]*?)[\t ]*;?[\t ]*$/gm;
     const lines = [];
 
-    script.source = script.source.replace(importRe, (line)=>{
-      lines.push({line});
+    script.source = script.source.replace(importRe, (line, normalizedLine)=>{
+      lines.push({line: normalizedLine});
       return '';
     });
 
@@ -15,7 +15,7 @@ export default class ImportTokenizer {
 
   defaultMember(line) {
     const type = 'default';
-    const defaultMemberRe = /^\s*import\s+(\w+)/;
+    const defaultMemberRe = /^import\s+(\w+)/;
     const matchResult = line.match(defaultMemberRe);
     const name = matchResult
       ? matchResult[1]
@@ -25,7 +25,7 @@ export default class ImportTokenizer {
   }
 
   module(line, script) {
-    const moduleRe = /(?:from\s+)?(["'])([\w/\-.]+)\1\s*;?\s*$/;
+    const moduleRe = /(?:from\s+)?(["'])([\w/\-._]+)\1$/;
     const matchResult = line.match(moduleRe);
     const moduleName = matchResult
       ? TokenizerUtils.resolveRelativePath(script.path, matchResult[2])
@@ -36,7 +36,7 @@ export default class ImportTokenizer {
 
   globMember(line) {
     const type = 'all';
-    const globMemberRe = /\*\s+as\s+(\w+)\s+from/;
+    const globMemberRe = /^import\s+\*\s+as\s+(\w+)/;
     const matchResult = line.match(globMemberRe);
     const name = matchResult
       ? matchResult[1]
@@ -46,7 +46,7 @@ export default class ImportTokenizer {
   }
 
   mappedMembers(line) {
-    const moduleRe = /{([\w\s,]*)}/;
+    const moduleRe = /^import\s+\{([\w\s,]*)}/;
     const matchResult = line.match(moduleRe);
     const mappedMemberMatch = matchResult
       ? matchResult[1]
