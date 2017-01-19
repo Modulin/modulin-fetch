@@ -1,13 +1,15 @@
-import TokenizerUtils from "../TokenizerUtils";
-
 export default class AmdWrapperGenerator {
   constructor(){
     this.counter = 0;
   }
 
+  generateDependencyMapping({id, statement}) {
+    return this.formatImportMembers(id, statement.members);
+  }
+
   generate(importStatements) {
     const processedImportStatements = importStatements.map(statement => {
-      const id = statement.id || this.generateId();
+      const id = statement.id;
       return {id, statement}
     });
 
@@ -20,15 +22,9 @@ export default class AmdWrapperGenerator {
       .map(s=>s.id)
       .join(',');
 
-    const mappedDependencies = processedImportStatements
-      .map(({id, statement})=>this.formatImportMembers(id, statement.members))
-      .filter(TokenizerUtils.filterEmpty)
-      .join(';\n  ');
-
     return {
       dependencyList: `[${dependencies}]`,
-      dependencyArguments: dependencyNames,
-      dependencyMappings: mappedDependencies
+      dependencyArguments: dependencyNames
     }
   }
 

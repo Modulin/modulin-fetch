@@ -1,16 +1,41 @@
 import TokenizerUtils from "./TokenizerUtils";
+import ImportStatement from "./ImportStatement";
 
 export default class ImportTokenizer {
+
+  constructor(importGenerator) {
+    this.importGenerator = importGenerator;
+  }
+
   extractImports(script) {
     const importRe = /^[\t ]*(import [\t \w"'-{}._]*?)[\t ]*;?[\t ]*$/gm;
-    const lines = [];
+    const imports = [];
 
     script.source = script.source.replace(importRe, (line, normalizedLine)=>{
-      lines.push({line: normalizedLine});
-      return '';
+      const importStatement = this.replaceImport(normalizedLine, {path: script.path});
+      imports.push(importStatement);
+      return this.importGenerator.generateDependencyMapping({id: importStatement.id, statement: importStatement});
     });
 
-    return lines;
+    return imports;
+  }
+
+  replaceImport(line, script) {
+    const id = this.importGenerator.generateId();
+
+    const defaultMember = this.defaultMember(line);
+    const moduleName = this.module(line, script);
+    const globMember = this.globMember(line);
+    const mappedMembers = this.mappedMembers(line);
+    const members = [defaultMember, globMember, ...mappedMembers]
+      .filter((it)=>this.filterEmpty(it))
+      .map((member)=>new ImportMember(member));
+
+    return new ImportStatement({id, moduleName, members});
+  }
+
+  filterEmpty(obj){
+    return !!obj.name;
   }
 
   defaultMember(line) {
@@ -58,4 +83,12 @@ export default class ImportTokenizer {
       .map((match)=>TokenizerUtils.splitMemberAndAlias(match));
   }
 
+}
+
+class ImportMember {
+  constructor({name, alias, type}){
+    this.name = name;
+    this.alias = alias;
+    this.type = type;
+  }
 }

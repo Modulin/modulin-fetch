@@ -1,4 +1,4 @@
-import {ImportStatement} from "./ImportParser"
+import ImportStatement from "./ImportStatement"
 
 export default class Modulin {
 

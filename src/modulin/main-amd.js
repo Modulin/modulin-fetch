@@ -16,14 +16,18 @@ import WrapperGeneratorAmd from './amd/AmdWrapperGenerator';
 import AmdDependencyResolver from './amd/AmdDependencyResolver';
 import AmdDependencyRepository from './amd/AmdDependencyRepository';
 
+const importGenerator = new ImportGeneratorAmd();
+const exportGenerator = new ExportGeneratorAmd();
+
+
+
+
+
 export default new Modulin({
-  importParser: new ImportParser(new ImportTokenizer()),
-  exportParser: new ExportParser(new ExportTokenizer()),
+  importParser: new ImportParser(new ImportTokenizer(importGenerator)),
+  exportParser: new ExportParser(new ExportTokenizer(exportGenerator)),
   loaderFactory: new AmdFactory(),
-  wrapperGenerator: new WrapperGeneratorAmd({
-    importGenerator: new ImportGeneratorAmd(),
-    exportGenerator: new ExportGeneratorAmd()
-  }),
+  wrapperGenerator: new WrapperGeneratorAmd({ importGenerator, exportGenerator}),
   dependencyRepositoryFactory: ({intercept, basePath})=> new AmdDependencyRepository({
     scriptLoader: new ScriptLoader({
       fetch: (url)=>new Request({url}),
