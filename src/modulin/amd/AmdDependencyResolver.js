@@ -12,6 +12,7 @@ export default class AmdDependencyResolver {
           if(exports)
             module.exports = exports;
 
+          Object.freeze(module.exports);
           modules.push(module);
         } catch(exception) {
           console.error(`Failed to load module ${module.id}`, exception);
