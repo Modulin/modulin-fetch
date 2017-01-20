@@ -1,31 +1,40 @@
 import {a} from './simpleExport';
-console.assert(a === "a");
+assert(a === "a");
 
 import {a} from '../tests/simpleExport';
-console.assert(a === "a");
+assert(a === "a");
 
 import {a} from '/tests/simpleExport';
-console.assert(a === "a");
+assert(a === "a");
 
 import simpleExportDefault from '/tests/simpleExport';
-console.assert(simpleExportDefault === "b");
+assert(simpleExportDefault === "b");
 
 import {a as b} from '/tests/simpleExport';
-console.assert(b === "a");
+assert(b === "a");
 
 import * as SimpleExport from '/tests/simpleExport';
-console.assert(SimpleExport.a === "a");
-console.assert(SimpleExport.b === "c");
+assert(SimpleExport.a === "a");
+assert(SimpleExport.b === "c");
 
 import {b as c} from '/tests/simpleExport';
-console.assert(c === "c");
+assert(c === "c");
 
 import {d, e} from '/tests/simpleExport';
-console.assert(typeof d === 'function');
-console.assert(typeof e === 'function');
+assert(typeof d === 'function');
+assert(typeof e === 'function');
 
 import {i, j} from '/tests/simpleExport';
-console.assert(i === 'i');
-console.assert(j === 'j');
+assert(i === 'i');
+assert(j === 'j');
+
+import {y, z} from '/tests/simpleExport';
+assert(y === 10);
+assert(z === 10);
 
 console.log("Simple import tests complete");
+
+function assert(expression, message) {
+  if(!expression)
+    throw message;
+}

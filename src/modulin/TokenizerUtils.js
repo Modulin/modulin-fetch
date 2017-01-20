@@ -16,7 +16,7 @@ export default class TokenizerUtils {
   static resolveRelativePath(cwd, path) {
     const excessiveDotsRe = /(^|\/)([\\.]){3,}/g;
     const noOpsRe = /(^|\/)[.](?=[^.])/g;
-    const duplicateSlashes = /\/{2,}/g;
+    const slashPrefix = /^\//g;
     const resolveRe = /(\.?[^.\n/]+)+(^|\/)[.]{2}/;
 
     const startChar = path[0];
@@ -34,7 +34,7 @@ export default class TokenizerUtils {
         resolvedFullPath = fullPath.replace(resolveRe, '');
       }
 
-      fullPath = fullPath.replace(duplicateSlashes, '');
+      fullPath = fullPath.replace(slashPrefix, '');
 
       return fullPath;
     } else {
