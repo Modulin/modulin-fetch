@@ -5,7 +5,7 @@
 
 __IMPORTANT! This is a work in progress and does not currently follow the ES6 nor the AmdJS specs.__
 
-Modulin was created after some rebelling of all the tooling which is required today to setup a minial development environment. Thats is why the project does NOT ship a javascrip parser and does NOT hold an AST (Abstract syntax tree) of the code. It currently supports a large subset of the ES6 import/export statements but is limited by what type of syntax is parsable when using regular expressions and what kind of variable manipulation can be executed safely without having an AST of the code. 
+Modulin was created after some rebelling of all the tooling which is required today to setup a minial development environment. Thats is why the project does NOT ship a javascrip parser and does NOT hold an AST (Abstract syntax tree) of the code. It currently supports a large subset of the ES6 import/export statements but is limited by what type of syntax is parsable when using regular expressions and what kind of variable manipulation can be executed safely without having an AST. 
 
 A minimal transpiler for ES6 import/export statements is provided using regular expressions which limits it's power but the solution has proven easy to work with. Behind the scenes it transpiles each file into an amd module and loads the module using a bundeled module loader.
 
