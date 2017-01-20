@@ -18,7 +18,7 @@ A demo of modulin loading it's own source can be found [here](https://www.legge.
 ### Browser
 - [X] IE9+
 - [X] Chrome 11+
-- [X] Fire fox 4+
+- [X] Firefox 4+
 
 ### ES6 
 - [x] Named, aliased and glob imports
