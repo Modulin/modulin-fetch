@@ -2,25 +2,25 @@ export default class AmdExportGenerator {
   constructor(){ }
 
   generate(exportStatements) {
-    const exportMappings = exportStatements
-      .map(statement=>this.formatImportMembers(statement.members))
-      .filter(line=>!!line)
-      .join('');
-
     return {
-      exportMappings
+      exportMappings: this.generateExportMappings(exportStatements)
     }
   }
 
-  generateId() {
-    return `__EXPORT${++this.counter}`
+  generateExportMappings(exportStatements) {
+    const exportMappings = exportStatements
+      .map(statement=>this.formatExportMembers(statement.members))
+      .filter(line=>!!line)
+      .join('');
+
+    return exportMappings;
   }
 
-  formatImportMembers(members) {
-    return members.map( member =>this.formatImportMember(member)).join(';');
+  formatExportMembers(members) {
+    return members.map( member =>this.formatExportMember(member)).join(';');
   }
 
-  formatImportMember(member){
+  formatExportMember(member){
     const name = member.name;
     const alias = member.alias || name;
 

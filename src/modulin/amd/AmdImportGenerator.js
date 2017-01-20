@@ -3,36 +3,35 @@ export default class AmdWrapperGenerator {
     this.counter = 0;
   }
 
-  generateDependencyMapping({id, statement}) {
-    return this.formatImportMembers(id, statement.members);
-  }
-
-  generate(importStatements) {
-    const processedImportStatements = importStatements.map(statement => {
-      const id = statement.id;
-      return {id, statement}
-    });
-
-    const dependencies = processedImportStatements
-      .map(s=>s.statement.moduleName)
-      .map(moduleName=>`"${moduleName}"`)
-      .join(',');
-
-    const dependencyNames = processedImportStatements
-      .map(s=>s.id)
-      .join(',');
-
-    return {
-      dependencyList: `[${dependencies}]`,
-      dependencyArguments: dependencyNames
-    }
-  }
-
   generateId() {
     return `__DEP${++this.counter}`
   }
 
-  formatImportMembers(id, members) {
+  generate(importStatements) {
+    return {
+      dependencyList: this.generateDependencyList(importStatements),
+      dependencyArguments: this.generateDependencyArguments(importStatements)
+    }
+  }
+
+  generateDependencyArguments(importStatements){
+    const dependencyNames = importStatements
+      .map(statement=>statement.id)
+      .join(',');
+
+    return dependencyNames;
+  }
+
+  generateDependencyList(importStatements){
+    const dependencies = importStatements
+      .map(statement=>statement.moduleName)
+      .map(moduleName=>`"${moduleName}"`)
+      .join(',');
+
+    return `[${dependencies}]`;
+  }
+
+  formatImportMembers({id, members}) {
     return members.map((member)=>this.formatImportMember(id, member)).join(';');
   }
 

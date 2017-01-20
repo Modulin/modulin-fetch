@@ -14,7 +14,7 @@ export default class ImportTokenizer {
     script.source = script.source.replace(importRe, (line, normalizedLine)=>{
       const importStatement = this.replaceImport(normalizedLine, {path: script.path});
       imports.push(importStatement);
-      return this.importGenerator.generateDependencyMapping({id: importStatement.id, statement: importStatement});
+      return this.importGenerator.formatImportMembers(importStatement);
     });
 
     return imports;
@@ -34,9 +34,6 @@ export default class ImportTokenizer {
     return new ImportStatement({id, moduleName, members});
   }
 
-  filterEmpty(obj){
-    return !!obj.name;
-  }
 
   defaultMember(line) {
     const type = 'default';
@@ -81,6 +78,11 @@ export default class ImportTokenizer {
       .split(',')
       .filter((it)=>TokenizerUtils.filterEmpty(it))
       .map((match)=>TokenizerUtils.splitMemberAndAlias(match));
+  }
+
+
+  filterEmpty(obj){
+    return !!obj.name;
   }
 
 }

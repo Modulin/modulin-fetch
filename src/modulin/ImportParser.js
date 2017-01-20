@@ -7,4 +7,5 @@ export default class ImportParser {
   rewrite({script, imports}){
     imports.push(...this.tokenizer.extractImports(script));
   }
+
 }

@@ -7,6 +7,27 @@ export default class ExportTokenizer {
     this.exportGenerator = exportGenerator;
   }
 
+  extractExports(script) {
+    const exportRe = /^[\t ]*(export[\t ]*[{*\w][^\n]*);?[\t ]*$/gm;
+    const exports = [];
+
+    script.source = script.source.replace(exportRe, (line, normalizedLine)=>{
+      const exportStatement = this.replaceExport(normalizedLine, exports);
+      exports.push(exportStatement);
+      return exportStatement.expression || '';
+    });
+
+    return exports;
+  }
+
+  replaceExport(line) {
+    return this.extractVariableDeclaration(line)
+      ||   this.extractPreDeclaredVariables(line)
+      ||   this.extractExpression(line)
+      ||   this.triggerExtractionError(line);
+  }
+
+
   extractVariableDeclaration(scriptSource) {
     const type = 'mapped';
     const variableDeclarationRe = /^export\s+((?:let|var|const)\s+(.+))/;
@@ -34,7 +55,7 @@ export default class ExportTokenizer {
       const members = [];
       const memberDeclarations = this.splitVariableAliases(variableString);
       const inlineMembers = memberDeclarations.map((member)=>new ExportMember(member));
-      const expression = inlineMembers.map((member)=>this.exportGenerator.formatImportMember(member)).join('');
+      const expression = inlineMembers.map((member)=>this.exportGenerator.formatExportMember(member)).join('');
       return new ExportStatement({ type, members, expression, module, moduleIsString});
     }
   }
@@ -72,26 +93,6 @@ export default class ExportTokenizer {
 
   triggerExtractionError(line) {
     throw `Export rewrite failed for line: ${line}`;
-  }
-
-  replaceExport(line) {
-    return this.extractVariableDeclaration(line)
-      ||   this.extractPreDeclaredVariables(line)
-      ||   this.extractExpression(line)
-      ||   this.triggerExtractionError(line);
-  }
-
-  extractExports(script) {
-    const exportRe = /^[\t ]*(export[\t ]*[{*\w][^\n]*);?[\t ]*$/gm;
-    const exports = [];
-
-    script.source = script.source.replace(exportRe, (line, normalizedLine)=>{
-      const exportStatement = this.replaceExport(normalizedLine, exports);
-      exports.push(exportStatement);
-      return exportStatement.expression || '';
-    });
-
-    return exports;
   }
 
 
