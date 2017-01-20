@@ -7,11 +7,13 @@
 </head>
 <body>
 <script>
-  window.define = modulin.createLoader("src/modulin/");
-  define(['main-amd'], function (modulin) {
-    window.define = modulin.exports.default.createLoader("src/examples/");
-    define(['visualSuccess'], {});
-  });
+  {
+    const define = modulin.createLoader("src/modulin/");
+    define(['main-amd'], function (modulin) {
+      const define = modulin.exports.default.createLoader("src/examples/");
+      define(['visualSuccess'], {});
+    });
+  }
 </script>
 </body>
 </html>

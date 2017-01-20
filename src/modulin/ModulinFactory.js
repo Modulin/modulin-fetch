@@ -1,18 +1,12 @@
-import ImportStatement from "./ImportStatement"
+export default class ModulinFactory {
 
-export default class Modulin {
-
-  constructor({importParser, exportParser, wrapperGenerator, dependencyRepositoryFactory, loaderFactory}){
+  constructor({importParser, exportParser, wrapperGenerator, dependencyRepositoryFactory, loaderFactory, temporaryLoaderFactory}){
     this.importParser = importParser;
     this.exportParser = exportParser;
     this.wrapperGenerator = wrapperGenerator;
     this.dependencyRepositoryFactory = dependencyRepositoryFactory;
     this.loaderFactory = loaderFactory;
-
-    this.defautImports = [
-      new ImportStatement({moduleName: 'exports', id: 'exports', members: [] })
-    ];
-    this.defaultExports = [];
+    this.temporaryLoaderFactory = temporaryLoaderFactory;
   }
 
   getScriptInterceptor(){
@@ -22,8 +16,8 @@ export default class Modulin {
   intercept(script) {
     const module = {
       script,
-      imports: [...this.defautImports],
-      exports: [...this.defaultExports]
+      imports: [],
+      exports: []
     };
 
     this.importParser.rewrite(module);
@@ -40,11 +34,13 @@ export default class Modulin {
       basePath: basePath
     });
 
-    return this.loaderFactory.createLoader(dependencyRepository);
+    const define = this.loaderFactory.createLoader(dependencyRepository);
+    this.temporaryLoaderFactory.setInstance(define);
+    return define;
   }
 
   load(basePath, module) {
-    window.define = this.createLoader(basePath);
+    const define = this.createLoader(basePath);
     define([module], {});
   }
 }

@@ -1,6 +1,6 @@
 import '../polyfills/polyfills';
 
-import Modulin from './Modulin';
+import ModulinFactory from './ModulinFactory';
 import Request from "./Request";
 import ScriptLoader from './ScriptLoader';
 
@@ -15,19 +15,21 @@ import ExportGeneratorAmd from './amd/AmdExportGenerator';
 import WrapperGeneratorAmd from './amd/AmdWrapperGenerator';
 import AmdDependencyResolver from './amd/AmdDependencyResolver';
 import AmdDependencyRepository from './amd/AmdDependencyRepository';
+import SingleRunDefineFactor from "./SingleRunDefineFactory";
 
 const importGenerator = new ImportGeneratorAmd();
 const exportGenerator = new ExportGeneratorAmd();
 
+const temporaryLoaderFactory = new SingleRunDefineFactor();
+temporaryLoaderFactory.registerGlobal();
 
-
-
-
-export default new Modulin({
+export default new ModulinFactory({ temporaryLoaderFactory,
   importParser: new ImportParser(new ImportTokenizer(importGenerator)),
   exportParser: new ExportParser(new ExportTokenizer(exportGenerator, importGenerator)),
   loaderFactory: new AmdFactory(),
-  wrapperGenerator: new WrapperGeneratorAmd({ importGenerator, exportGenerator}),
+  wrapperGenerator: new WrapperGeneratorAmd({ importGenerator, exportGenerator,
+    getDefinePropertyName: ()=>temporaryLoaderFactory.create()
+  }),
   dependencyRepositoryFactory: ({intercept, basePath})=> new AmdDependencyRepository({
     scriptLoader: new ScriptLoader({
       fetch: (url)=>new Request({url}),

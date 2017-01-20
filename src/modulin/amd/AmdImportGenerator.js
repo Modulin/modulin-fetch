@@ -1,6 +1,11 @@
+import ImportStatement from "../ImportStatement";
+
 export default class AmdWrapperGenerator {
   constructor(){
     this.counter = 0;
+    this.defaultImports = [
+      new ImportStatement({moduleName: 'exports', id: 'exports', members: [] })
+    ];
   }
 
   generateId() {
@@ -8,9 +13,10 @@ export default class AmdWrapperGenerator {
   }
 
   generate(importStatements) {
+    const extendedImportStatements = [...this.defaultImports, ...importStatements];
     return {
-      dependencyList: this.generateDependencyList(importStatements),
-      dependencyArguments: this.generateDependencyArguments(importStatements)
+      dependencyList: this.generateDependencyList(extendedImportStatements),
+      dependencyArguments: this.generateDependencyArguments(extendedImportStatements)
     }
   }
 
