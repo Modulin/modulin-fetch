@@ -4,11 +4,16 @@ export default class AmdExportGenerator {
   generate(exportStatements) {
     const exportMappings = exportStatements
       .map(statement=>this.formatImportMembers(statement.members))
-      .join(';\n  ');
+      .filter(line=>!!line)
+      .join('');
 
     return {
       exportMappings
     }
+  }
+
+  generateId() {
+    return `__EXPORT${++this.counter}`
   }
 
   formatImportMembers(members) {
@@ -22,8 +27,10 @@ export default class AmdExportGenerator {
     switch(member.type) {
       case "mapped":
         return `exports['${alias}'] = ${name};`;
-      default:
+      case "resolved":
         return '';
+      default:
+        throw "Unknown member type"
     }
   }
 

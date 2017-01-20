@@ -48,7 +48,7 @@ export default class TokenizerUtils {
     return {name, value, type};
 
     function trim(str){
-      return str.trim();
+      return str.trim().replace(/;$/, '');
     }
   }
 

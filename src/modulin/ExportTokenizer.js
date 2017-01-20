@@ -3,8 +3,12 @@ import ExportStatement from "./ExportStatement";
 
 export default class ExportTokenizer {
 
+  constructor(exportGenerator){
+    this.exportGenerator = exportGenerator;
+  }
+
   extractVariableDeclaration(scriptSource) {
-    const type = 'variable';
+    const type = 'mapped';
     const variableDeclarationRe = /^export\s+((?:let|var|const)\s+(.+))/;
     const matchResult = scriptSource.match(variableDeclarationRe);
     const [matched, expression, variableString] = matchResult
@@ -19,7 +23,7 @@ export default class ExportTokenizer {
   }
 
   extractPreDeclaredVariables(scriptSource) {
-    const type = 'mapped';
+    const type = 'resolved';
     const predeclaredVariableRe = /^export\s+\{(?:([\s\w,]*)|(\*))}(?:\s+from\s+(["'])?([\w\-/]+)\3)?/;
     const matchResult = scriptSource.match(predeclaredVariableRe);
     const [matched, variableString, allMembers, moduleIsString, module] = matchResult
@@ -27,9 +31,11 @@ export default class ExportTokenizer {
       : [];
 
     if(matched) {
+      const members = [];
       const memberDeclarations = this.splitVariableAliases(variableString);
-      const members = memberDeclarations.map((member)=>new ExportMember(member));
-      return new ExportStatement({ type, members, module, moduleIsString});
+      const inlineMembers = memberDeclarations.map((member)=>new ExportMember(member));
+      const expression = inlineMembers.map((member)=>this.exportGenerator.formatImportMember(member)).join('');
+      return new ExportStatement({ type, members, expression, module, moduleIsString});
     }
   }
 
@@ -41,8 +47,8 @@ export default class ExportTokenizer {
       : [];
 
     if(matched) {
-      const immediateDeclaration = isDefault && !isDeclaration;
       const missingName = !name;
+      const immediateDeclaration = isDefault && !isDeclaration;
 
       let type;
       let members = [];
@@ -64,10 +70,15 @@ export default class ExportTokenizer {
     }
   }
 
+  triggerExtractionError(line) {
+    throw `Export rewrite failed for line: ${line}`;
+  }
+
   replaceExport(line) {
     return this.extractVariableDeclaration(line)
       ||   this.extractPreDeclaredVariables(line)
-      ||   this.extractExpression(line);
+      ||   this.extractExpression(line)
+      ||   this.triggerExtractionError(line);
   }
 
   extractExports(script) {
