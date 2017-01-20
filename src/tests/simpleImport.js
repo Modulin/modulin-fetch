@@ -35,6 +35,8 @@ assert(z === 10);
 console.log("Simple import tests complete");
 
 function assert(expression, message) {
-  if(!expression)
-    throw message;
+  if(!expression) {
+    const error = new Error(`Assertion failed${message ? `(${message})` : ''}`);
+    throw error;
+  }
 }

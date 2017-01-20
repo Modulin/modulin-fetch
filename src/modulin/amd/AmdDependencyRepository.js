@@ -5,6 +5,7 @@ export default class AmdDependencyRepository {
 
     this.loadingModuleIds = [];
     this.pendingModules = [];
+    this.failedModules = [];
     this.resolvedModules = [{id: 'exports'}];
   }
 
@@ -14,6 +15,7 @@ export default class AmdDependencyRepository {
       this.pendingModules.push(module);
 
       this.dependencyResolver.resolve({
+        failedModules: this.failedModules,
         pendingModules: this.pendingModules,
         modules: this.resolvedModules
       });
@@ -46,8 +48,12 @@ export default class AmdDependencyRepository {
   }
 
   detectCircularReferences() {
-    if( this.loadingModuleIds.length === 0 && this.pendingModules.length > 0) {
-      console.log('Possible circular dependency', this.pendingModules);
+    if (
+      this.failedModules.length === 0 &&
+      this.loadingModuleIds.length === 0 &&
+      this.pendingModules.length > 0
+    ) {
+      console.log('Possible circular dependencies', this.pendingModules);
     }
   }
 

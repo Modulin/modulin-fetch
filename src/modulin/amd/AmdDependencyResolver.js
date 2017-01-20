@@ -1,5 +1,5 @@
 export default class AmdDependencyResolver {
-  resolve({pendingModules, modules}) {
+  resolve({failedModules, pendingModules, modules}) {
 
     for(let i = 0; i < pendingModules.length; i++){
       const module = pendingModules[i];
@@ -15,6 +15,7 @@ export default class AmdDependencyResolver {
           Object.freeze(module.exports);
           modules.push(module);
         } catch(exception) {
+          failedModules.push(module);
           console.error(`Failed to load module ${module.id}`, exception);
         }
 
