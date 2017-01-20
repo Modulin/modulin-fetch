@@ -17,3 +17,7 @@ export let i = 'i', j = 'j';
 
 export * from "tests/simpleExport2";
 export {z as y} from "tests/simpleExport2";
+
+export {k}
+
+class k {}

@@ -72,12 +72,9 @@ export default class ExportTokenizer {
           exportStatement: new ExportStatement({members: [], moduleName, expression})
         };
       } else {
-        const members = [];
         const memberDeclarations = this.splitVariableAliases(variableString);
-        const inlineMembers = memberDeclarations.map((member) => new ExportMember(member));
-        const expression = inlineMembers.map((member) => this.exportGenerator.formatExportMember(member)).join('');
-
-        return {exportStatement: new ExportStatement({members, expression})};
+        const members = memberDeclarations.map((member) => new ExportMember(member));
+        return {exportStatement: new ExportStatement({members})};
       }
     }
   }
