@@ -8,7 +8,7 @@ export default class ExportTokenizer {
   }
 
   extractExports(script) {
-    const exportRe = /^[\t ]*(export[\t ]*[{*\w][^\n]*);?[\t ]*$/gm;
+    const exportRe = /^[\t ]*(export[\t ]+[{*\w][^\n]*);?[\t ]*$/gm;
     const exports = [];
 
     script.source = script.source.replace(exportRe, (line, normalizedLine)=>{
