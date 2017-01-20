@@ -9,6 +9,10 @@ Modulin was created after some rebelling of all the tooling which is required to
 
 A minimal transpiler for ES6 import/export statements is provided using regular expressions which limits it's power but the solution has proven easy to work with. Behind the scenes it transpiles each file into an amd module and loads the module using a bundeled module loader.
 
+A demo of the hello-world.html in action can be found [here](https://www.legge.se/modulin/hello-world.html "legge.se") (Should work in most browsers)
+
+A demo of modulin loading it's own source can be found [here](https://www.legge.se/modulin/test-load-self.html "legge.se") (Chrome 54+ is recomended since the source consists of non transpiled ES6 code)
+
 ## Compatibility
 
 ### Browser
