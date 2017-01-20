@@ -14,3 +14,6 @@ export class e { }
 
 export let f, g, h;
 export let i = 'i', j = 'j';
+
+export * from "tests/simpleExport2";
+export {z as y} from "tests/simpleExport2";

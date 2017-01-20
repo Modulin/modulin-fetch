@@ -25,7 +25,7 @@ const exportGenerator = new ExportGeneratorAmd();
 
 export default new Modulin({
   importParser: new ImportParser(new ImportTokenizer(importGenerator)),
-  exportParser: new ExportParser(new ExportTokenizer(exportGenerator)),
+  exportParser: new ExportParser(new ExportTokenizer(exportGenerator, importGenerator)),
   loaderFactory: new AmdFactory(),
   wrapperGenerator: new WrapperGeneratorAmd({ importGenerator, exportGenerator}),
   dependencyRepositoryFactory: ({intercept, basePath})=> new AmdDependencyRepository({

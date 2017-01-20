@@ -1,5 +1,6 @@
 import TokenizerUtils from "./TokenizerUtils";
 import ImportStatement from "./ImportStatement";
+import ImportMember from "./ImportMember";
 
 export default class ImportTokenizer {
 
@@ -85,12 +86,4 @@ export default class ImportTokenizer {
     return !!obj.name;
   }
 
-}
-
-class ImportMember {
-  constructor({name, alias, type}){
-    this.name = name;
-    this.alias = alias;
-    this.type = type;
-  }
 }

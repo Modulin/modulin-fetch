@@ -17,7 +17,7 @@ export default class AmdExportGenerator {
   }
 
   formatExportMembers(members) {
-    return members.map( member =>this.formatExportMember(member)).join(';');
+    return members.map( member =>this.formatExportMember(member)).join('');
   }
 
   formatExportMember(member){

@@ -4,8 +4,10 @@ export default class ExportParser {
     this.tokenizer = tokenizer;
   }
 
-  rewrite({script, exports}){
-    exports.push(...this.tokenizer.extractExports(script));
+  rewrite({script, exports, imports}){
+    const extracted = this.tokenizer.extractExports(script);
+    exports.push(...extracted.exports);
+    imports.push(...extracted.imports);
   }
 
 }
