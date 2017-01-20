@@ -3,7 +3,7 @@
 # Modulin
 
 
-__IMPORTANT! This is a work in progress and does not currently follow the ES6 nor the AmdJS specs.__
+__IMPORTANT! This is a work in progress and does not currently follow the ES6 nor the AmdJS specs. Only ment to be used in development environments__
 
 Modulin was created after some rebelling of all the tooling which is required today to setup a minial development environment. Thats is why the project does NOT ship a javascrip parser and does NOT hold an AST (Abstract syntax tree) of the code. It currently supports a large subset of the ES6 import/export statements but is limited by what type of syntax is parsable when using regular expressions and what kind of variable manipulation can be executed safely without having an AST. 
 
@@ -16,7 +16,7 @@ A demo of modulin loading it's own source can be found [here](https://www.legge.
 ## Compatibility
 
 ### Browser
-- [X] IE9
+- [X] IE9+
 - [X] Chrome 11+
 - [X] Fire fox 4+
 
