@@ -1,6 +1,6 @@
 export default class AmdDependencyRepository {
-  constructor({scriptLoader, dependencyResolver}) {
-    this.scriptLoader = scriptLoader;
+  constructor({loadScript, dependencyResolver}) {
+    this.loadScript = loadScript;
     this.dependencyResolver = dependencyResolver;
 
     this.loadingModuleIds = [];
@@ -34,13 +34,12 @@ export default class AmdDependencyRepository {
     unloadedDependencies.forEach(path=>{
       if(this.loadingModuleIds.indexOf(path) === -1) {
         this.loadingModuleIds.push(path);
-        this.scriptLoader
-          .load(`${path}.js`, path)
-          .then((script) => {
-            const index = this.loadingModuleIds.indexOf(path);
-            index !== -1 && this.loadingModuleIds.splice(index, 1);
-            script.execute();
-          });
+
+        this.loadScript(path).then((script) => {
+          const index = this.loadingModuleIds.indexOf(path);
+          index !== -1 && this.loadingModuleIds.splice(index, 1);
+          script.execute();
+        });
       }
     });
     this.pendingModules.push(module);

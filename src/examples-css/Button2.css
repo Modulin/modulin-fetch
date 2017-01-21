@@ -1,0 +1,17 @@
+body {
+  background: blue!important;
+}
+
+.button {
+  width: 200px;
+  height: 200px;
+}
+
+.buttonDefault {
+  background: green;
+  border: 1px solid greenyellow;
+}
+
+.buttonDefault:active {
+  background: forestgreen;
+}

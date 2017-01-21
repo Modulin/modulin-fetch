@@ -17,25 +17,41 @@ import AmdDependencyResolver from './amd/AmdDependencyResolver';
 import AmdDependencyRepository from './amd/AmdDependencyRepository';
 import SingleRunDefineFactor from "./SingleRunDefineFactory";
 
+import JavascriptInterceptor from "./JavascriptInterceptor";
+import CssInterceptor from "./CssInterceptor";
+
 const importGenerator = new ImportGeneratorAmd();
 const exportGenerator = new ExportGeneratorAmd();
 
 const temporaryLoaderFactory = new SingleRunDefineFactor();
 temporaryLoaderFactory.registerGlobal();
 
-export default new ModulinFactory({ temporaryLoaderFactory,
-  importParser: new ImportParser(new ImportTokenizer(importGenerator)),
-  exportParser: new ExportParser(new ExportTokenizer(exportGenerator, importGenerator)),
-  loaderFactory: new AmdFactory(),
-  wrapperGenerator: new WrapperGeneratorAmd({ importGenerator, exportGenerator,
-    getDefinePropertyName: ()=>temporaryLoaderFactory.create()
-  }),
-  dependencyRepositoryFactory: ({intercept, basePath})=> new AmdDependencyRepository({
-    scriptLoader: new ScriptLoader({
-      fetch: (url)=>new Request({url}),
-      intercept,
-      basePath
+const scriptInterceptors = {
+  default: new JavascriptInterceptor({
+    importParser: new ImportParser(new ImportTokenizer(importGenerator)),
+    exportParser: new ExportParser(new ExportTokenizer(exportGenerator, importGenerator)),
+    wrapperGenerator: new WrapperGeneratorAmd({
+      importGenerator, exportGenerator,
+      getDefinePropertyName: () => temporaryLoaderFactory.create()
     }),
+  }),
+  css: new CssInterceptor()
+};
+
+function dependencyRepositoryFactory({basePath}){
+  const scriptLoader = new ScriptLoader({
+    fetch: (url)=>new Request({url}),
+    scriptInterceptors,
+    basePath
+  });
+  return new AmdDependencyRepository({
+    loadScript: (path) => scriptLoader.load(path),
     dependencyResolver: new AmdDependencyResolver()
-  })
+  });
+}
+
+export default new ModulinFactory({
+  temporaryLoaderFactory,
+  loaderFactory: new AmdFactory(),
+  dependencyRepositoryFactory
 });
