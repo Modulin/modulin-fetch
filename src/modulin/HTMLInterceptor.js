@@ -4,7 +4,7 @@ export default class HTMLInterceptor {
       .replace(/"/g, `\\"`)
       .replace(/\n/g, '<!-- LINE BREAK --!>');
 
-    script.source = `const template = "${html}";\nexport {template as default}`;
+    script.source = `var template = "${html}";\nexport {template as default}`;
 
     return script;
   }
