@@ -34,9 +34,8 @@ export default class CssInterceptor {
         return subs;
       }, {})
   }
-
   generateJs(selectors, script) {
     const encodedSelectors = JSON.stringify(selectors);
-    script.source = `export default ${encodedSelectors}`;
+    script.source = `var selectors = JSON.parse('${encodedSelectors}');\nexport {selectors as default}`;
   }
 }

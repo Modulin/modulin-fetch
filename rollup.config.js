@@ -12,11 +12,11 @@ export default {
       exclude: 'node_modules/**',
       presets: 'es2015-rollup'
     }),
-    uglify({
-      drop_debugger: true,
-      evaluate: true,
-      reduce_vars: true,
-      pure_getters: true
-    })
+    // uglify({
+    //   drop_debugger: true,
+    //   evaluate: true,
+    //   reduce_vars: true,
+    //   pure_getters: true
+    // })
   ]
 }
