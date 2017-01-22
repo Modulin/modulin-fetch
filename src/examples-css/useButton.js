@@ -1,9 +1,7 @@
-import Button from './Button';
-import buttonStyle1 from './Button1.css';
-import buttonStyle2 from './Button2.css';
+import {create as createButton, style as buttonStyle} from "ButtonFactory";
 
-const button1 = new Button(buttonStyle1);
+const button1 = createButton({style: buttonStyle.DEFAULT});
 button1.attach(document.body);
 
-const button2 = new Button(buttonStyle2);
+const button2 = createButton({style: buttonStyle.LARGE});
 button2.attach(document.body);

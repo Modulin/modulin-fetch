@@ -18,6 +18,7 @@ import AmdDependencyRepository from './amd/AmdDependencyRepository';
 import SingleRunDefineFactor from "./SingleRunDefineFactory";
 
 import JavascriptInterceptor from "./JavascriptInterceptor";
+import HTMLInterceptor from "./HTMLInterceptor";
 import CssInterceptor from "./CssInterceptor";
 
 const importGenerator = new ImportGeneratorAmd();
@@ -35,7 +36,8 @@ const scriptInterceptors = {
       getDefinePropertyName: () => temporaryLoaderFactory.create()
     }),
   }),
-  css: new CssInterceptor()
+  css: new CssInterceptor(),
+  html: new HTMLInterceptor()
 };
 
 function dependencyRepositoryFactory({basePath}){

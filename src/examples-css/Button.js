@@ -1,11 +1,5 @@
-const template = `
-<div class="#button #buttonDefault">
-  
-</div>
-`;
-
 export default class Button {
-  constructor(style) {
+  constructor(template, style) {
     this.element = createElement(template, style);
   }
 
