@@ -5,6 +5,7 @@
   "author": "Rikard Legge <rikard.legge@gmail.se>",
   "main": "dist/modulin-fetch.amd.min.js",
   "module": "dist/modulin-fetch.amd.module.js",
+  "jsnext:main": "dist/modulin-fetch.amd.module.js",
   "license": "MIT",
   "devDependencies": {
     "babel-preset-es2015-rollup": "^3.0.0",
