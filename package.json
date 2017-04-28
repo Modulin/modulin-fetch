@@ -1,6 +1,6 @@
 {
   "name": "modulin-fetch",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "repository": "https://github.com/RikardLegge/modulin-fetch.git",
   "author": "Rikard Legge <rikard.legge@gmail.se>",
   "main": "dist/modulin-fetch.amd.min.js",
