@@ -1,11 +1,11 @@
 <p align="center"><a><img width="102"src="https://github.com/RikardLegge/modulin/blob/master/resources/logo.png"></a></p>
 
-# Modulin
+# Modulin Fetch
 
 
 __IMPORTANT! This is a work in progress and does not currently follow the ES6 nor the AmdJS specs. Only ment to be used in development environments__
 
-Modulin was created after some rebelling of all the tooling which is required today to setup a minial development environment. Thats is why the project does NOT ship a javascrip parser and does NOT hold an AST (Abstract syntax tree) of the code. It currently supports a large subset of the ES6 import/export statements but is limited by what type of syntax is parsable when using regular expressions and what kind of variable manipulation can be executed safely without having an AST. 
+Modulin Fetch was created after some rebelling of all the tooling which is required today to setup a minial development environment. Thats is why the project does NOT ship a javascrip parser and does NOT hold an AST (Abstract syntax tree) of the code. It currently supports a large subset of the ES6 import/export statements but is limited by what type of syntax is parsable when using regular expressions and what kind of variable manipulation can be executed safely without having an AST. 
 
 A minimal transpiler for ES6 import/export statements is provided using regular expressions which limits it's power but the solution has proven easy to work with. Behind the scenes it transpiles each file into an amd module and loads the module using a bundeled module loader.
 
@@ -13,7 +13,7 @@ A demo of the hello-world.html in action can be found [here](https://www.legge.s
 
 A demo of the hello-css.html in action can be found [here](https://www.legge.se/modulin/hello-css.html "legge.se") (Imports both HTML and CSS through the default import syntax and renders two buttons to the DOM)
 
-A demo of modulin loading it's own source can be found [here](https://www.legge.se/modulin/test-load-self.html "legge.se") (Chrome 54+ is recomended since the source consists of non transpiled ES6 code)
+A demo of modulin fetch loading it's own source can be found [here](https://www.legge.se/modulin/test-load-self.html "legge.se") (Chrome 54+ is recomended since the source consists of non transpiled ES6 code)
 
 ## Compatibility
 
