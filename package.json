@@ -1,8 +1,10 @@
 {
   "name": "modulin-fetch",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "repository": "https://github.com/RikardLegge/modulin-fetch.git",
   "author": "Rikard Legge <rikard.legge@gmail.se>",
+  "main": "dist/modulin-fetch.amd.min.js",
+  "module": "dist/modulin-fetch.amd.module.js",
   "license": "MIT",
   "devDependencies": {
     "babel-preset-es2015-rollup": "^3.0.0",
@@ -12,6 +14,6 @@
     "uglify-js": "^2.7.5"
   },
   "scripts": {
-    "build": "rollup -c"
+    "build": "rollup -c && rollup -c rollup.module.config.js"
   }
 }
