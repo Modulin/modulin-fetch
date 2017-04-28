@@ -3,9 +3,9 @@ import uglify from 'rollup-plugin-uglify';
 
 export default {
   entry: 'src/modulin/main-amd.js',
-  dest: 'dist/modulin.amd.min.js',
+  dest: 'dist/modulin-fetch.amd.min.js',
   format: 'iife',
-  moduleName: 'modulin',
+  moduleName: 'modulinFetch',
 
   plugins: [
     babel({

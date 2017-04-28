@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <script src="dist/modulin.amd.min.js"></script>
+    <script src="dist/modulin-fetch.amd.min.js"></script>
 </head>
 <body>
     <script>
       {
-        const define = modulin.createLoader("src/modulin/");
+        const define = modulinFetch.createLoader("src/modulin/");
         define(['main-amd'], function (modulin) {
-          const define = modulin.exports.default.createLoader("src/");
-          define(['examples-css/useButton'], () => document.body.style.backgroundColor = "green");
+          const define = modulin.exports.default.createLoader("src/examples-css/");
+          define(['useButton'], () => document.body.style.backgroundColor = "green");
         });
       }
     </script>
