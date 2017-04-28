@@ -1,8 +1,8 @@
 {
   "name": "modulin-fetch",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "repository": "https://github.com/RikardLegge/modulin-fetch.git",
-  "author": "Rikard Legge <rikard@legge.se>",
+  "author": "Rikard Legge <rikard.legge@gmail.se>",
   "license": "MIT",
   "devDependencies": {
     "babel-preset-es2015-rollup": "^3.0.0",
